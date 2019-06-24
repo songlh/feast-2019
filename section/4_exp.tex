@@ -1,0 +1,31 @@
+\section{Experiment}
+
+\subsection{Methodology}
+
+
+\noindent\textbf{Implementation and Platform} 
+We implement \Tool{} using LLVM-7.0.0~\cite{LLVM}, 
+and conduct our experiments on a Linux machine, 
+with E5-2630 CPU, 32GB memory and 3.10 kernel. 
+
+\noindent\textbf{Benchmarks}
+\Tool{} is a tool to automatically identify loops that implement FSMs. 
+We evaluate \Tool{} using representative software in the real world. 
+Our selected software come from three sources. 
+
+a. Two ctf programs
+
+b. cgc programs 
+
+c. OPENVPN
+
+\noindent\textbf{Evaluation Setting}
+
+
+We mainly compute metrics to answer two research questions regarding the coverage and accuracy of \Tool{}.
+
+\textbf{Q1.} Whether \Tool{} can identify all FSM implementations in evaluated software?
+ 
+\textbf{Q2.} Whether \Tool{} will report loops, which are not to implement FSMs, 
+generating false positives. 
+
