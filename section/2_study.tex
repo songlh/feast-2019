@@ -28,3 +28,23 @@ To conduct the study, we first randomly sample
 We then manually inspect the sampled programs and look for implementation of FSMs.
 In total, we identify {\color{red}{XXX}} implemented FSMs, 
 and they are the targets of our study.
+
+To guide the implementation of \Tool{}, our empirical study 
+is mainly conducted from the following four aspects. 
+
+First, what code constructs are used to implement the FSMs?
+Since our goal is to statically identify and extract implemented FSMs, 
+we need to know what code constructs to inspect. 
+Not surprisingly, all our studied FSMs are implemented using a loop. 
+In each loop iteration, an implemented FSM 
+decides whether to stay in the current state or transit to a new state. 
+The underlying intuition is that a FSM usually needs to process 
+more than one input and similar logics are applied during the processing, 
+so that using loop is a natural way to implement a FSM. 
+
+Second, how internal states ($Q$) are maintained by the FSMs?
+
+Third, what are the input alphabet ($\sum$)? 
+
+Four, how the transition functions ($\delta$) are implemented?
+
