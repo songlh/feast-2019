@@ -27,14 +27,31 @@ which provides an implementation of virtual private network and
 is included in software packages of every released Linux version. 
 
 
+\input{section/tab-app}
 
-\noindent\textbf{Evaluation Setting}
+The benchmark information is shown in Table~\ref{tab:benchmark}.
+In total, we use 163 different benchmark programs to evaluate \Tool{}.
+All our benchmarks are either real software or 
+simplified programs from real applications. 
+They are either widely-used in the real world or popular in the security community. 
+They cover programs in small, medium and large sizes, 
+with lines of code ranging from 0.1 thousand to more than 100 thousand.  
+We believe that our benchmarks are representative 
+enough to evaluate the effectiveness of \Tool{}. 
 
+\noindent\textbf{Evaluation Setting.} 
+For all our benchmark programs, we first manually examine all their loops and 
+identify all FSM implementations. 
+As shown in Table~\ref{tab:benchmark}, there are in 
+total 68 FSMs. 
+We then apply \Tool{} to all benchmark programs. 
+We mainly compute metrics to answer two research 
+questions regarding the coverage and accuracy of \Tool{}.
 
-We mainly compute metrics to answer two research questions regarding the coverage and accuracy of \Tool{}.
-
-\textbf{Q1.} Whether \Tool{} can identify all FSM implementations in evaluated software?
+\textbf{Q1.} Whether \Tool{} can identify all FSM implementations 
+in evaluated benchmarks?
  
 \textbf{Q2.} Whether \Tool{} will report loops, which are not to implement FSMs, 
 generating false positives. 
+
 
