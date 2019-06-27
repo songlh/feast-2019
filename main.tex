@@ -39,7 +39,31 @@
 %%
 \RequirePackage{listings}
 
-
+\lstset{
+	language=C++,
+	numbers=left,
+	stepnumber=1,
+	numbersep=0.5em,
+	basicstyle=\ttfamily,
+	keywordstyle=\color{blue}\textbf,
+	stringstyle=\color{red}\ttfamily,
+	commentstyle=\color{green}\ttfamily,
+	morecomment=[l][\color{magenta}]{\#}
+	frame=single,
+	breaklines=true,
+}
+%\lstset{language=C++, basicstyle=\footnotesize, upquote=true,
+%    numbers=left, 
+%    stepnumber=1, 
+%    numbersep=0.5em,
+%    keywordstyle=\color{blue}\textbf, 
+%%    deletendkeywords={all,filter},
+%    morekeywords={true, false},
+%    commentstyle=\color{purple}\textit,
+%    frame=single,
+%    breaklines=true
+%%    xleftmargin=1.7em,xrightmargin=-1.3em
+%}
 
 
 \captionsetup{format=default, font=bf}
