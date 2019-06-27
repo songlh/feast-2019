@@ -19,9 +19,11 @@ $s_0$ is an initial state, and $F$ is a set of final states.
 We leverage the DARPA CGC dataset~\cite{CGC} to 
 understand how FSMs are implemented in the real world. 
 We choose the CGC dataset, because it 
-contains diverse programs simplified 
-from real-world software and it is also widely used in security 
+contains a large number of diverse programs simplified 
+from real-world software and the dataset 
+is also widely used in security 
 community~\cite{QSYM, Driller, VUzzer}. 
+
 
 To conduct the study, we first randomly sample 
 40 programs from the CGC dataset.
@@ -31,12 +33,13 @@ and they are the targets of our study.
 Figure~\ref{fig:cgc-fsm} shows one example.
 Function \texttt{cgc\_parse\_set()} takes string \texttt{right} 
 as input and returns \texttt{true} if \texttt{right} matches 
-regular expression \verb/|("[^"]*")?|/. 
-Figure~\ref{xxx} shows the FSM maintained by function \texttt{cgc\_parse\_set()}. 
-In total the FSM contains six states and {\color{red} XXX} 
+regular expression ``\verb/|("[^"]*")?|/''. 
+Figure~\ref{xxx} shows the FSM implemented by function \texttt{cgc\_parse\_set()}. 
+In total the FSM contains six states 
+and {\color{red} XXX} 
 state transitions. 
 
-%\verb/^\"((\w|\s)+)\"$/
+
 \input{section/fig-cgc-fsm}
 
 To guide the implementation of \Tool{}, our empirical study 
@@ -53,24 +56,26 @@ The underlying intuition is that a FSM usually needs to process
 more than one input and similar logics are applied during the processing, 
 so that using loop is a natural way to implement a FSM. 
 Another important observation is that 
-the loops used to implement FSMs do not execute constant iterations,
+the loops used to implement the studied FSMs do not execute constant iterations,
 while their executions dynamically depend on inputs. 
 For example, the iteration number of the loop in Figure~\ref{fig:cgc-fsm}
 is not a constant value and it depends on the content of string \texttt{right}.
+
 
 Second, how internal states ($Q$) are maintained by the FSMs?
 Intuitively, the implementation of a FSM must contain a state variable, 
 which tracks the current state of the FMS.
 Our study confirms this intuition. 
-We also find that state variables are either in integer type or in enumeration type,
-and their values are diescrete and bounded in certain range. 
-This finding inspires us to apply static value set analysis 
-to determine possible states of an implemented FSM.
+We also find that state variables are either in integer type or enumeration type,
+and their values are discrete and bounded in a certain range. 
+This finding inspires us to apply static value set analysis~\cite{DEEPVSA,VSA} 
+to determine all possible states of an implemented FSM.
 For example, local variable \texttt{state} declared at line 11
 is the state variable for the FSM in Figure~\ref{fig:cgc-fsm}.
 It is in enumeration type.
-It has six possible values specified by the declaration of 
-enumeration type at line 1. 
+In total, it has six possible values specified by the declaration of 
+its type at line 1. 
+
 
 
 
