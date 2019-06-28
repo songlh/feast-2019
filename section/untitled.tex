@@ -1,0 +1,28 @@
+
+
+To guide the implementation of \Tool{}, our empirical study 
+is mainly conducted from the following aspects. 
+
+
+
+
+Third, what is the input alphabet ($\sum$)? 
+The input alphabet of a FSM is theoretically bounded by all possible values 
+of the type used to save inputs. 
+For example, the input alphabet of the FSM 
+in Figure~\ref{fig:cgc-fsm} 
+contains all possible byte values.
+Sometimes, an input alphabet is a subset of all possible values, 
+and we think value set analysis can help refine the input alphabet for an 
+identified FSM.
+We also observe that during the implementation of a FSM, 
+developers usually do not enumerate the processing rule for every 
+input in the alphabet,
+while they tend to explicitly specify the rules only for several special inputs
+and leave others to be handled by a default setting. 
+For example, only the processing rules for `\verb/|/ and `''' are specified in Figure~\ref{fig:cgc-fsm}, 
+and all other byte values are handled by the defaulting setting specified at line 37. 
+
+Four, how the transition functions ($\delta$) are implemented?
+
+Five, how to specify the initial state ($s_0$) and the final states ($F$)? 

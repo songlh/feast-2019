@@ -1,6 +1,6 @@
 \section{Empirical Study}
 \label{sec:study}
-In this section, we will first review the mathematical definition of FSM and then 
+In this section, we will first review the mathematical definition of FSM and then
 we will describe our empirical study on how FSMs are implemented 
 in real-world software. 
 
@@ -34,10 +34,10 @@ Figure~\ref{fig:cgc-fsm} shows one example.
 Function \texttt{cgc\_parse\_set()} takes string \texttt{right} 
 as input and returns \texttt{true} if \texttt{right} matches 
 regular expression ``\verb/|("[^"]*")?|/''. 
-Figure~\ref{xxx} shows the FSM implemented by function \texttt{cgc\_parse\_set()}. 
+Figure~\ref{fig:cgc} shows the FSM implemented by function \texttt{cgc\_parse\_set()}. 
 In total the FSM contains six states 
-and {\color{red} XXX} 
-state transitions. 
+and nine state transitions. 
+
 
 
 \input{section/fig-cgc-code}
@@ -45,7 +45,8 @@ state transitions.
 \input{section/fig-cgc-fsm}
 
 To guide the implementation of \Tool{}, our empirical study 
-is mainly conducted from the following aspects. 
+is mainly conducted from the following aspects.
+
 
 First, what code constructs are used to implement the FSMs?
 Since our goal is to statically identify and extract implemented FSMs, 
@@ -63,7 +64,6 @@ while their executions dynamically depend on inputs.
 For example, the iteration number of the loop in Figure~\ref{fig:cgc-fsm}
 is not a constant value and it depends on the content of string \texttt{right}.
 
-
 Second, how internal states ($Q$) are maintained by the FSMs?
 Intuitively, the implementation of a FSM must contain a state variable, 
 which tracks the current state of the FMS.
@@ -76,12 +76,63 @@ For example, local variable \texttt{state} declared at line 11
 is the state variable for the FSM in Figure~\ref{fig:cgc-fsm}.
 It is in enumeration type.
 In total, it has six possible values specified by the declaration of 
-its type at line 1. 
+its type at line 1, corresponding to the six states in Figure~\ref{fig:cgc}.
 
+Third, what is the input alphabet ($\sum$)? 
+The input alphabet of a FSM is theoretically bounded by all possible values 
+of the data type used to save inputs. 
+For example, the input alphabet of the FSM 
+in Figure~\ref{fig:cgc-fsm} 
+contains all possible byte values.
+Sometimes, an input alphabet is a subset of all possible values, 
+and we think value set analysis can help refine the input alphabet for an 
+identified FSM.
+We also observe that during the implementation of a FSM, 
+developers usually do not enumerate the processing rule for every 
+input value in the alphabet,
+while they tend to explicitly specify the rules only for several special values
+and leave others to be handled by a default rule. 
+For example, only the processing rules for `\verb/|/' and `''' 
+are specified in Figure~\ref{fig:cgc-fsm}, 
+and all other byte values are handled by 
+the defaulting rule specified at line 37. 
 
-
-
-Third, what are the input alphabet ($\sum$)? 
 
 Four, how the transition functions ($\delta$) are implemented?
+Transition functions take the current state and a value
+in the alphabet as input and output the next state. 
+We observe that transition functions are implemented
+using control constructs (e.g., \texttt{if}, \texttt{switch}) by developers. 
+For example, a transition function in Figure~\ref{fig:cgc-fsm} 
+is implemented by line 14, 16 and 17. 
+If the current state is \texttt{start} at line 16 and the current input value is 
+`\verb/|/’ at line 14, the transition function returns \texttt{open\_set}
+as the next state. 
+Line 25, line 27 and line 28 implement another transition function,
+which consumes an input character `''' at line 25 and 
+transits from the current state 
+\texttt{open\_double} at line 27 to 
+the next state \texttt{close\_double} at line 28. 
+
+
+
+
+Five, how to specify the initial state ($s_0$) and the final states ($F$)? 
+The initial state of a FSM can be specified 
+by the value of the state variable before the 
+execution of the loop implementing the FSM.
+For example, the initial state of the FSM in Figure~\ref{fig:cgc-fsm}
+is \texttt{start}, which is the value of the state variable of \texttt{state} 
+before the loop execution at line 13. 
+All possible values of the state variable when the loop finishes its execution 
+represent all final states of the FSM. 
+For example, there are two possible values the state value \texttt{state} when 
+the loop in Figure~\ref{fig:cgc-fsm}, one is \texttt{error} and the other is \texttt{close\_set}.
+These two values represent the two final states of the implemented FSM in Figure~\ref{fig:cgc}.
+
+To sum up, our empirical study shows that 
+there are clearly code patterns used by developers to implement FSMs. 
+We will discuss how we leverage these patterns to extract 
+FSMs in Section~\ref{sec:impl}.
+
 
