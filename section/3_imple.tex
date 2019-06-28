@@ -1,6 +1,40 @@
 \section{Implementation}
 \label{sec:impl}
 
-In this section, we will describe how we implement \Tool{} 
-using the example shown in Figure~\ref{fig:cgc-fsm}. 
+From our empirical study in Section~\ref{sec:study},
+we observe that a FSM is implemented using a loop 
+whose iteration number is not constant  
+and the loop conditionally updates a state variable in each iteration. 
+Therefore, \Tool{} extracts implemented FSMs from a program in three steps.
+First, \Tool{} looks for loops without constant iteration numbers. 
+Second, \Tool{} checks whether there are state 
+variable updates inside the loops to identify FSM implementations. 
+Third, \Tool{} applies a suite 
+of static analysis to figure out states ($Q$), 
+transition functions ($\delta$), the initial state ($s_0$),
+and final states ($F$) for each FSM implementation. 
+
+
+\subsection{Filtering Loops with Constant Iterations}
+As we discussed in Section~\ref{sec:study},
+a FSM is usually implemented using a loop 
+and the loop processes one input in each iteration to decide 
+whether to update the FSM’s state. 
+In reality, it is very rare that a FSM can arrive its final state after receiving 
+a constant number of inputs. 
+Therefore, loops iterating constant numbers of times in each execution 
+are unlikely to be FSM implementations. 
+
+We mainly leverage scalar evolution analysis to identify loops 
+whose iteration numbers are constant. 
+Scalar evolution analysis can identify reduction variables inside a loop.
+Reduction variables are integer variables, whose values are updated 
+in a constant strip in each loop iteration. 
+
+
+
+\subsection{Pinpointing State Variables}
+
+
+\subsection{Extracting FSMs}
 
