@@ -79,18 +79,16 @@ state variable.
 We further eliminate false positives when identifying state variables 
 by considering how a FSM conducts state transitions. 
 As discussed in Section~\ref{sec:study}, 
-a transition function refers to the current state to determine which 
-state to transit to. Therefore, a memory write to a state 
-variable is control dependent 
-on a predicate evaluation using the memory read value 
-from the state variable.
-For example, assigning \texttt{open\_set} to the state variable 
-\texttt{state} at line 17 in Figure~\ref{fig:cgc-fsm}
-is control dependent on the evaluation of ``\texttt{state==start}’’ at line 15 and 16. 
-As another example, 
-assigning \texttt{close\_double} to \texttt{state} at 
-line 25 is control dependent on the 
-evaluation of ``\texttt{state==open\_double} at line 23 and line 24. 
+a transition function refers to the current state to determine the next state. 
+Therefore, defining the next state through writing a state variable 
+is control dependent~\cite{cdg} on a predicate evaluation using the memory read value
+from the state variable. 
+For the FSM in Figure~\ref{fig:cgc-fsm}, 
+transiting to state \texttt{open\_set} at line 17
+is control dependent on the evaluation of ``\texttt{state==start}'' at line 15 and 16. 
+and transiting to \texttt{close\_double} at line 25 is control dependent on the 
+evaluation of ``\texttt{state==open\_double}'' at line 23 and line 24. 
+
 
 
 
