@@ -67,7 +67,8 @@ depends on the content of input string \texttt{right}.
 
 
 Second, how internal states ($Q$) are maintained by the FSMs?
-Intuitively, there must be a state variable, which tracks the current state of a FMS. 
+Intuitively, there must be a state variable, which tracks the current state of a FMS, 
+and a FSM loop conditionally update its state variable in each iteration.  
 Our study confirms this intuition. 
 We also find that state variables are either in integer type or enumeration type,
 and their values are discrete and bounded in a certain range. 
