@@ -15,8 +15,7 @@
              switch(state) {
                  case start:
                      state = open_set; break;
-                 case open_double:
-                     break;
+                 case open_double: break;
                  default:
                      state = close_set; break;
              }
