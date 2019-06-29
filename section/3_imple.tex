@@ -142,10 +142,15 @@ data dependent on the same enumeration variable \texttt{state}.
 Therefore, \Tool{} identifies \texttt{state} as a state variable. 
 
 
-
 \subsection{Constructing FSMs}
 \label{sec:tuple}
-With a FSM loop and identified state variables, 
-we now discuss how we construct the implemented FSM. 
-Specifically, we need to figure out the five-element tuple for the identified FSM. 
+We consider a loop as a FSM loop, if it does not have a constant trip count 
+and contains updates to a state variable.
+As discussed in Section~\ref{sec:study}, 
+a FSM loop may contain more than one state variables. 
+In this case, the loop is used to implement more than one FSM.
+With a FSM loop and identified state variables inside it, 
+\Tool{} constructs a FSM for each state variable, 
+by figuring out the five-element tuple 
+($Q$, $\sum$, $\delta$, $s_0$, $F$). 
 
