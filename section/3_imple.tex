@@ -51,11 +51,47 @@ Therefore, \Tool{} does not filter out the loop and considers it
 as a potential FSM implementation 
 for further analysis. 
 
-
-
-
-
 \subsection{Pinpointing State Variables}
+
+Our empirical study shows that state variables are either in integer or enumeration type
+and a FSM loop conditionally conducts a state transition in each iteration. 
+Therefore, a FSM loop must contain memory write to an integer 
+(or an enumeration) variable. 
+Since transition functions need to refer to the current state, 
+a value assigned to a state variable in one iteration needs 
+to propagate to future iterations of a FSM loop. 
+Given a candidate FSM loop, \Tool{} leverages live variable 
+analysis~\cite{live-analysis} to 
+identify possible state variables, which are integer variables 
+updated inside the loop and have updated values live outside the loop 
+or in the next iteration. 
+
+We illustrate this approach by taking the FSM 
+in Figure~\ref{fig:cgc-fsm} for example. 
+Variable \texttt{state} is an enumeration variable and it is updated at 
+line 17, 20, 25, 27, 29, and 35 inside the while loop. 
+The updated values are possibly read at line 15, 23 and 32 
+in the next iteration or at line 41 outside the loop.
+Therefore, \Tool{} identifies \texttt{state} as a possible 
+state variable.  
+
+
+We further eliminate false positives when identifying state variables 
+by considering how a FSM conducts state transitions. 
+As discussed in Section~\ref{sec:study}, 
+a transition function refers to the current state to determine which 
+state to transit to. Therefore, a memory write to a state 
+variable is control dependent 
+on a predicate evaluation using the memory read value 
+from the state variable.
+For example, assigning \texttt{open\_set} to the state variable 
+\texttt{state} at line 17 in Figure~\ref{fig:cgc-fsm}
+is control dependent on the evaluation of ``\texttt{state==start}’’ at line 15 and 16. 
+As another example, 
+assigning \texttt{close\_double} to \texttt{state} at 
+line 25 is control dependent on the 
+evaluation of ``\texttt{state==open\_double} at line 23 and line 24. 
+
 
 
 \subsection{Extracting FSMs}
