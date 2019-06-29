@@ -15,21 +15,43 @@ transition functions ($\delta$), the initial state ($s_0$),
 and final states ($F$) for each FSM implementation. 
 
 
-\subsection{Filtering Loops with Constant Iterations}
+\subsection{Filtering Loops with Constant Trip Counts}
 As we discussed in Section~\ref{sec:study},
 a FSM is usually implemented using a loop 
 and the loop processes one input in each iteration to decide 
-whether to update the FSM’s state. 
-In reality, it is very rare that a FSM can arrive its final state after receiving 
-a constant number of inputs. 
-Therefore, loops iterating constant numbers of times in each execution 
-are unlikely to be FSM implementations. 
+whether to transit to a new state. 
+In reality, it is very rare that a FSM can arrive at a final state 
+after receiving a constant number of inputs. 
+Therefore, given a loop which iterates a constant 
+number during every execution, 
+the loop is unlikely to be a FSM implementation. 
 
-We mainly leverage scalar evolution analysis to identify loops 
-whose iteration numbers are constant. 
+
+We mainly leverage scalar evolution analysis~\cite{scalar-1,scalar-2,scalar-3} 
+to identify loops whose trip counts are constant. 
 Scalar evolution analysis can identify reduction variables inside a loop.
-Reduction variables are integer variables, whose values are updated 
-in a constant strip in each loop iteration. 
+Reduction variables are integer variables, 
+whose values are updated 
+with a constant delta in each loop iteration. 
+For example, variable \texttt{right} is the only reduction 
+variable inside the loop in Figure~\ref{fig:cgc-fsm}, 
+since its value is incremented by one in every loop iteration.  
+When a loop finishes its execution, the value change of a 
+reduction variable is a multiplication of 
+the iterations executed by the loop. 
+
+After identifying reduction variables inside a loop,
+\Tool{} checks whether any exit condition of the loop is to compare 
+a reduction variable with a constant number. 
+If so, then the loop’s trip count is constant and \Tool{} filter out the loop. 
+For example, the only reduction variable \texttt{right} is dereferenced 
+in exit conditions of the loop in Figure~\ref{fig:cgc-fsm} 
+and it is not compared with a constant number.
+Therefore, \Tool{} does not filter out the loop and considers it 
+as a potential FSM implementation 
+for further analysis. 
+
+
 
 
 
