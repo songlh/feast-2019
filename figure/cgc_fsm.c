@@ -14,33 +14,25 @@
          if (*right == '|') {
              switch(state) {
                  case start:
-                     state = open_set;
-                     break;
-                 case open_double:
-                     break;
+                     state = open_set; break;
+                 case open_double: break;
                  default:
-                     state = close_set;
-                     break;
+                     state = close_set; break;
              }
          } else if (*right == '"') {
              switch(state) {
                  case open_double:
-                     state = close_double;
-                     break;
+                     state = close_double; break;
                  case open_set:
-                     state = open_double;
-                     break;
+                     state = open_double; break;
                  default:
-                     state = error;
-                     goto end;
+                     state = error; goto end;
              }
          } else {
              switch(state) {
-                 case open_double:
-                     break;
+                 case open_double: break;
                  default:
-                     state = error;
-                     goto end;
+                     state = error; goto end;
              }
          }
          right++;
