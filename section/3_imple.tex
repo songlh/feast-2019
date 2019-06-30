@@ -2,14 +2,14 @@
 \label{sec:impl}
 
 Our empirical study in Section~\ref{sec:study} 
-shows that a FSM is implemented in a loop 
-which does not have a constant trip count (or iteration number) 
+shows that a FSM is usually implemented in a loop 
+which does not take a constant trip count (or iteration number) 
 and conditionally updates a state variable 
 to transit to a new state in each iteration. 
 Therefore, \Tool{} searches FSM loops
 by first filtering loops with constant trip counts (Section~\ref{sec:constant}) 
 and then identifying loops with state variable updates (Section~\ref{sec:variable}).
-The ultimate goal of \Tool{} is to extract implemented FSMs, 
+The ultimate goal of \Tool{} is to construct implemented FSMs in a program, 
 and thus we will discuss how \Tool{} figures out the five-element tuple 
 ($Q$, $\sum$, $\delta$, $s_0$, $F$) 
 for an identified FMS in Section~\ref{sec:tuple}. 
@@ -21,6 +21,7 @@ and source code information (line 9) for each
 implemented FSM in the program.  
 
 
+
 \begin{algorithm}[!htb]
     \caption{Finite State Machine Extraction}
     \label{alg:fsm}
@@ -29,13 +30,13 @@ implemented FSM in the program.
         \Function {\Tool}{$P$}
         \State initialize an empty FSM set \emph{S} = \{\}
         \For{each loop $l$ in $P$}
-        	\If{$l$ has a constant trip count}
+        	\If{$l$ takes a constant trip count}
         		\State \textbf{continue}
         	\EndIf
         	 \If{$l$ has state variable updates}
         			\State t($Q$, $\sum$, $\delta$, $s_0$, $F$) $\gets$ ConstructFSM($l$)
-        			\State locInfo $\gets$ ExtractLOCInfo($l$) 
-        			\State S.Insert(t, locInfo)
+        			\State srcInfo $\gets$ ExtractSRCInfo($l$) 
+        			\State S.Insert(t, srcInfo)
         	\EndIf
         \EndFor
         \State \Return{$S$}
@@ -46,12 +47,13 @@ implemented FSM in the program.
 
 \subsection{Filtering Loops with Constant Trip Counts}
 \label{sec:constant}
+
 As discussed in Section~\ref{sec:study},
 a FSM is usually implemented using a loop 
 and the loop processes one input in each iteration to decide 
 whether to transit to a new state. 
 In reality, it is very rare that a FSM can arrive at a final state 
-after processing a constant number of inputs.
+after processing a predefined, constant number of inputs.
 Our empirical study confirms this intuition. 
 None of our studied FMS loops take a constant trip count.  
 To sum up, given a loop which iterates a constant 
@@ -72,15 +74,17 @@ reduction variable is a multiplication of
 the iterations executed by the loop. 
 
 After identifying reduction variables inside a loop,
-\Tool{} checks whether any exit condition of the loop is to compare 
+\Tool{} examines each exit condition of the loop and checks whether 
+any of them is to compare 
 a reduction variable with a constant number. 
-If so, then the loop’s trip count is constant and \Tool{} filter out the loop. 
-For example, the only reduction variable \texttt{right} is dereferenced 
-in exit conditions of the loop in Figure~\ref{fig:cgc-fsm} 
-and it is not compared with a constant number.
-Therefore, \Tool{} does not filter out the loop and considers it 
-as a potential FSM implementation 
-for further analysis. 
+If so, then the loop’s trip count is constant and \Tool{} filters out the loop. 
+For example, only the dereferenced value of the reduction variable \texttt{right}
+is used in exit conditions of the loop in Figure~\ref{fig:cgc-fsm}. 
+Since \texttt{right} is the only one reduction variable inside the loop
+and it is not compared with a constant number in exit conditions, 
+\Tool{} does not filter out the loop and considers it 
+as a potential FSM loop for further analysis. 
+
 
 \subsection{Pinpointing State Variables}
 \label{sec:variable}
@@ -105,9 +109,11 @@ Variable \texttt{state} is an enumeration variable and it is assigned
 with a new value at 
 line 17, 20, 25, 27, 29, and 35 inside the \texttt{while} loop. 
 The updated values are possibly read at line 15, 23 and 32 
-in the next iteration of the loop or at line 41 outside the loop.
+in the next iteration of the loop or at line 41 outside the loop, 
+so that these values are live in the next iteration and outside the loop. 
 Therefore, \Tool{} considers \texttt{state} as a possible 
 state variable.  
+
 
 We further eliminate false positives when identifying state variables 
 by considering how a FSM conducts state transitions. 
@@ -117,29 +123,32 @@ Therefore, defining the next state through writing a new value to a state variab
 is control dependent~\cite{cdg} on a predicate evaluation 
 using the current value of the state variable.  
 Take the FSM in Figure~\ref{fig:cgc-fsm} as an example, 
-transiting to state \texttt{open\_set} at line 17
+transiting to state \texttt{open\_set} at line 17 by assigning \texttt{open\_set}
+to \texttt{state} 
 is control dependent on the evaluation of ``\texttt{state==start}''
-where the value of \texttt{state} is read at line 15 and \texttt{start} is a constant. 
+where the current value of \texttt{state} is read at 
+line 15 and \texttt{start} is a constant. 
 Transiting to \texttt{close\_double} at 
 line 25 is control dependent on the 
 evaluation of ``\texttt{state==open\_double}'', 
-and the value of \texttt{state} is read at line 23.
+and the current value of \texttt{state} is read at line 23.
 
-\Tool{} implements this mechanism using the following two steps. 
+
+\Tool{} implements this mechanism through the following two steps. 
 First, for each memory write to an integer (or enumeration) 
 variable inside a candidate loop, 
 \Tool{} searches conditional branches inside the loop 
-on which the memory write is control dependent. 
-Second, \Tool{} checks whether the condition 
-of a searched branch 
-is data dependent on the same integer variable. 
+which the memory write is control dependent on. 
+Second, \Tool{} checks whether the condition of a searched branch 
+is data dependent on the value of the same integer variable. 
 For example, the memory write at line 17 is conducted on an enumeration variable
-and it is control dependent on the underlying branch 
-instruction represented by 
+and it is control dependent on the underlying conditional branch 
+instruction for 
 the \texttt{switch} at line 15 and the \texttt{case} at line 16.  
 The condition of the branch is ``\texttt{state==start}'' and it is 
-data dependent on the same enumeration variable \texttt{state}. 
+data dependent on the value of the same enumeration variable \texttt{state}. 
 Therefore, \Tool{} identifies \texttt{state} as a state variable. 
+
 
 
 \subsection{Constructing FSMs}

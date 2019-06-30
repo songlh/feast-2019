@@ -103,6 +103,9 @@ For example, only the processing rules for `\verb/|/' and `'''
 are specified in Figure~\ref{fig:cgc-fsm}, 
 and all other byte values are handled by 
 the default rule at line 31. 
+\commentlh{remember to mention a distinct input is processed in each iteration 
+and remember to discuss how to identify variables or memory locations holding inputs}
+
 
 Four, how the transition functions ($\delta$) are implemented?
 Transition functions take the current state and a value
@@ -119,6 +122,7 @@ which consumes an input character `''' at line 22 and
 transits from the current state 
 \texttt{open\_double} at line 24 to 
 the next state \texttt{close\_double} at line 25. 
+\commentlh{remember to discuss a transition function is executed in one iteration}
 
 
 Five, how to specify the initial state ($s_0$) and the final states ($F$)? 
