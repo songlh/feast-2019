@@ -8,11 +8,12 @@ and conduct our experiments on a Linux machine,
 with E5-2630 CPU, 32GB memory and 3.10 kernel. 
 
 \noindent\textbf{Benchmarks.}
-\Tool{} is a tool to automatically extract FSMs implemented in programs. 
+\Tool{} is a tool to automatically extract FSMs implemented in a program. 
 Since we build \Tool{} using LLVM, 
 our current implementation can only work on C/C++ programs.  
 However, we believe that our algorithm is general enough 
 to be extended to other programming languages. 
+
 
 To evaluate \Tool{}, we collect C/C++ programs from three sources. 
 First, we evaluate \Tool{} on two programs collected in a CTF contest~\cite{ctf}, 
@@ -29,29 +30,39 @@ is included in software packages of every released Linux version.
 \input{section/tab-app}
 
 The benchmark information is shown in Table~\ref{tab:benchmark}.
-In total, we use 163 different benchmark programs to evaluate \Tool{}.
+In total, we use 163 different programs to evaluate \Tool{}.
 All our benchmarks are either real software or 
 simplified programs from real applications. 
 They are either widely-used in the real world or popular in the security community. 
 They cover programs in small, medium and large sizes, 
-with lines of code ranging from 0.1 thousand to more than 100 thousand.  
+with lines of code ranging from 0.3 thousand to more than 100 thousand.  
 We believe that our benchmarks are representative 
 enough to evaluate the effectiveness of \Tool{}.
 
 \noindent\textbf{Evaluation Setting.} 
-For all our benchmark programs, we first manually examine all their loops and 
-identify all FSM implementations. 
+For all our benchmark programs, we manually examine all their loops and 
+identify all FSM loops. 
 As shown in Table~\ref{tab:benchmark}, there are in 
-total 68 FSMs. 
-We then apply \Tool{} to all benchmark programs. 
+total 66 FSMs.
+Four FSM loops contain two state variables, 
+and all other FMS loops contain exact one state variables.
+Therefore, there are in total 70 FSMs implemented in all our benchmarks.  
+We apply \Tool{} to all benchmark programs. 
 We mainly compute metrics to answer two research 
 questions regarding the coverage and accuracy of \Tool{}.
 
-\textbf{Q1.} Whether \Tool{} can identify all FSM implementations 
-in evaluated benchmarks?
+
+\textbf{Q1. Coverage:} whether \Tool{} can identify all implemented FSMs?
  
-\textbf{Q2.} Whether \Tool{} will report loops, which are not to implement FSMs, 
+\textbf{Q2. Accuracy:} whether \Tool{} will report loops, which are FSM loops, 
 generating false positives. 
 
 
 \subsection{Experimental Results}
+
+\input{section/tab-exp}
+
+\noindent\textbf{Coverage.}
+
+
+\noindent\textbf{Accuracy.}
