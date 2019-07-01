@@ -224,22 +224,22 @@ Line 17 $\rightarrow$ 13 $\rightarrow$ 22 $\rightarrow$ 23 $\rightarrow$ 26 $\ri
 is a path from one assignment site of the state variable \texttt{state} 
 to another assignment site. 
 The path constraints are 
-``\texttt{*right != NULL \&\& state != close\_set \&\& *right == `”’ \&\& state == open\_set}'', 
+``\texttt{*right != NULL \&\& state != close\_set \&\& *right == `"' \&\& state == open\_set}'', 
 which do not contain conflicting constraints. 
 The path constraints do not conflict with the pre-condition ``\texttt{state==open\_set}'' 
 specified at the starting assignment site at line 17.
 Therefore, \Tool{} identifies a transition function which transits the FSM from  
 \texttt{open\_set} to \texttt{open\_double}. 
 \Tool{} figures out the input value used by the 
-transition function as `\texttt{”}', 
+transition function as `\texttt{"}', 
 indicated by the path 
-constraint ``\texttt{*right == `”’ }''.  
+constraint ``\texttt{*right == `"'}''.  
 Line 17 $\rightarrow$ 13 $\rightarrow$ 14 $\rightarrow$ 15 
 $\rightarrow$ 16 $\rightarrow$ 17
 is another path identified by the reachability analysis. 
-However, the path constraints (``\texttt{*right != NULL \&\& state != close\_set \&\& *right == `|’ \&\& state == start}’’) 
+However, the path constraints (``\texttt{*right != NULL \&\& state != close\_set \&\& *right == `|' \&\& state == start}'') 
 conflict 
-with the pre-condition (``\texttt{state==open\_set}’’), 
+with the pre-condition (``\texttt{state==open\_set}''), 
 and thus \Tool{} does not consider this path indicates a transition function. 
 
 
