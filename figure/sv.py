@@ -5,20 +5,25 @@ from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
 if __name__ == '__main__':
 
-	#rawList = [31, 25, 2, 3, ]
+	
 	svList = ['2', '3', '4', '5', '>=6']
-	numList = [31, 25, 2, 3, 5]
 
-	totalNum = sum(numList)
+	#{2: 34, 3: 26, 4: 3, 5: 2, 6: 1, 7: 1, 9: 1, 11: 2},
+	numTestList = [34, 26, 3, 2, 5]
+	#{2: 8, 3: 10, 4: 1, 5: 3, 9: 1, 11: 2},
+	numStudyList = [8, 10, 1, 3, 3]
+
 
 	XList = svList
-	YList = [ num * 1.0 / totalNum for num in numList]
+	YTestList = [ num * 1.0 / sum(numTestList) for num in numTestList]
+	YStudyList = [num * 1.0 / sum(numStudyList) for num in numStudyList]
 
 	
 	ind = np.arange(5)
-	width = 0.5
+	width = 0.35
 	fig, ax = plt.subplots()
-	rects = ax.bar(ind, YList, width, color='b')
+	rects1 = ax.bar(ind, YTestList, width, color='g', label='Test')
+	rects2 = ax.bar(ind + width, YStudyList, width, color='b', label='Study')
 
 	datemin = 0 - 0.2
 	datemax = 5 #+ 0.2
@@ -46,7 +51,9 @@ if __name__ == '__main__':
 	plt.gcf().subplots_adjust(bottom=0.15)
 	plt.gcf().subplots_adjust(left=0.15)
 
-	plt.xticks(ind+width/2, XList)
+	plt.legend(fontsize='x-large')
+
+	plt.xticks(ind + width, XList)
 
 	#plt.show()
 	fig.savefig('sv-dist.pdf')
