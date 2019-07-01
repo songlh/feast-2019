@@ -139,10 +139,12 @@ the loop in Figure~\ref{fig:cgc-fsm} finishes its execution,
 one is \texttt{error} and the other is \texttt{close\_set}.
 These two values represent the two final states of 
 the FSM in Figure~\ref{fig:cgc}.
+\commentlh{\texttt{state} can be any value when the loop finishes its execution}
 
 To sum up, our empirical study shows that 
 there are clearly code patterns used by developers to implement FSMs. 
-In Section~\ref{sec:impl}, we will discuss how we leverage these patterns to build \Tool{}, 
+In Section~\ref{sec:impl}, we will discuss how we 
+leverage these patterns to build \Tool{}, 
 which can extract implemented FSMs from a program. 
 
 

@@ -150,10 +150,9 @@ data dependent on the value of the same enumeration variable \texttt{state}.
 Therefore, \Tool{} identifies \texttt{state} as a state variable. 
 
 
-
 \subsection{Constructing FSMs}
 \label{sec:tuple}
-We consider a loop as a FSM loop, if it does not have a constant trip count 
+We consider a loop as a FSM loop, if it does not take a constant trip count 
 and contains updates to a state variable.
 As discussed in Section~\ref{sec:study}, 
 a FSM loop may contain more than one state variable. 
@@ -164,20 +163,22 @@ by figuring out the five-element
 tuple ($Q$, $\sum$, $\delta$, $s_0$, $F$). 
 
 To figure out all possible states ($Q$) of a FSM 
-is equivalently to determine all possible values of a state variable. 
+is equivalent to determine all possible values of its state variable. 
 If a state variable is in enumeration type, 
 \Tool{} recognizes all its possible values 
-through the declaration of the enumeration type. 
-For example, \Tool{} identifies all the possible values of 
+by examining the declaration of the enumeration type. 
+For example, \Tool{} identifies all the six possible values of 
 the state variable \texttt{state} (Figure~\ref{fig:cgc-fsm}) 
 by inspecting the type declaration at line 1. 
 If a state variable is an integer variable, \Tool{} regards 
 a constant value assigned to the state variable or 
 compared with the state variable as a possible state. 
 The current version of \Tool{} only examines the function
-containing the analyzing FSM loop, which may miss some states. 
-Future work could inspect the whole program using interprocedural analysis 
-to identify more states. 
+containing the analyzing FSM loop, so that it may miss some states. 
+Future work could inspect the whole program by 
+applying an interprocedural 
+value set analysis to identify more states. 
+
 
 One iteration of a FSM loop processes a distinct input, 
 such as a new character from a string or a new incoming package. 
@@ -188,11 +189,13 @@ Take the FSM loop in Figure~\ref{fig:cgc-fsm} as an example,
 \texttt{right} is incremented by one in each iteration at line 38, 
 so that the FSM loop refers to a different memory location 
 for an input to be processed in each iteration.  
-After identifying how a FSM locates inputs, 
-\Tool{} figures out the type of inputs and considers all possible values in that type
+After figuring out where a FSM locates its inputs, 
+\Tool{} understands the type of the inputs 
+and considers all possible values in that type
 as the input alphabet $\sum$. For example, \Tool{} identifies 
-the $\sum$ for the FSM in Figure~\ref{fig:cgc-fsm} 
-as all possible byte values. 
+the $\sum$ as all possible byte values 
+for the FSM in Figure~\ref{fig:cgc-fsm}. 
+
 
 \Tool{} mainly relies on symbolic execution~\cite{klee,s2e} 
 to synthesize transition functions ($\delta$).  
@@ -212,25 +215,45 @@ the values used at the starting assignment
 site and ending site respectively. 
 \Tool{} figures out the input values the identified 
 transition function refers to 
-from the collected path constraints. 
+by analyzing the collected path constraints. 
 
-We illustrate how \Tool{} synthesizes transition functions by taking 
-the FSM in Figure~\ref{fig:cgc-fsm} for example. 
-Line 17 $\rightarrow$ 13 $\rightarrow$ 22 $\rightarrow$ 23 $\rightarrow$ 26
+
+We illustrate how \Tool{} synthesizes transition functions using 
+the FSM in Figure~\ref{fig:cgc-fsm} as an example. 
+Line 17 $\rightarrow$ 13 $\rightarrow$ 22 $\rightarrow$ 23 $\rightarrow$ 26 $\rightarrow$ 27
 is a path from one assignment site of the state variable \texttt{state} 
 to another assignment site. 
-The path constraints are ``\texttt{*right != NULL \&\& state != close\_set \&\& *right == `”’ \&\& state == open\_set}’’. 
-There are no conflicting constraints and the path 
-constraints do not conflict with the pre-condition that ``\texttt{state==open\_set}’’.
-Therefore, \Tool{} identifies a transition function which transit the FSM from  
+The path constraints are 
+``\texttt{*right != NULL \&\& state != close\_set \&\& *right == `”’ \&\& state == open\_set}'', 
+which do not contain conflicting constraints. 
+The path constraints do not conflict with the pre-condition ``\texttt{state==open\_set}'' 
+specified at the starting assignment site at line 17.
+Therefore, \Tool{} identifies a transition function which transits the FSM from  
 \texttt{open\_set} to \texttt{open\_double}. 
 \Tool{} figures out the input value used by the 
-transition function as `”`, 
-indicated by the path constraint \texttt{*right == `”’ }.  
+transition function as `\texttt{”}', 
+indicated by the path 
+constraint ``\texttt{*right == `”’ }''.  
+Line 17 $\rightarrow$ 13 $\rightarrow$ 14 $\rightarrow$ 15 
+$\rightarrow$ 16 $\rightarrow$ 17
+is another path identified by the reachability analysis. 
+However, the path constraints (``\texttt{*right != NULL \&\& state != close\_set \&\& *right == `|’ \&\& state == start}’’) 
+conflict 
+with the pre-condition (``\texttt{state==open\_set}’’), 
+and thus \Tool{} does not consider this path indicates a transition function. 
+
 
 
 \Tool{} compute $s_0$ and $F$ through analyzing the value of 
-the state value before the execution of the FSM loop and after the loop execution respectively. 
+the state value before the execution of the 
+FSM loop and after the loop execution respectively. 
+For example, the value of \texttt{state} is \texttt{start} before the loop in Figure~\ref{fig:cgc-fsm} executes, 
+so that $s_0$ of the FSM is \texttt{start}.
+The loop terminates when finishing 
+parsing the input string pointed by \texttt{right},
+leaving \texttt{state} to be any value declared at line 1, 
+and thus $F$ consists of all states. 
+
 
 
 
