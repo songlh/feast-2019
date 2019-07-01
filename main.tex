@@ -8,6 +8,8 @@
 % standard LaTeX packages
 %\usepackage{changebar}
 \usepackage[normalem]{ulem}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usepackage{balance}
 \usepackage{alltt}
 \usepackage{amsmath}
@@ -74,6 +76,8 @@
 
 \newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}%
 
+\newcommand{\commentlh}[1]{{\color{red} \sf (LH: #1)}}
+
 \sloppy
 
 \input macros.tex
@@ -97,12 +101,16 @@
 
 \newcommand{\hpad}[0]{\hspace*{\fill}}
 
-\newcommand{\Tool}{XXX}
+\newcommand{\Tool}{FSMExtractor}
 
 \newcommand{\Thrust}[1]{\hyperref[sec:thrust-#1]{Thrust #1}}
 \newcommand{\Code}[1]{\lstinline{#1}}
 
+\begin{abstract}
 \input{section/0_abstract}
+\end{abstract}
+
+
 \input{section/1_intro}
 \input{section/2_study}
 \input{section/3_imple}
