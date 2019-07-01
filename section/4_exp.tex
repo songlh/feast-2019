@@ -51,18 +51,41 @@ We apply \Tool{} to all benchmark programs.
 We mainly compute metrics to answer two research 
 questions regarding the coverage and accuracy of \Tool{}.
 
-
 \textbf{Q1. Coverage:} whether \Tool{} can identify all implemented FSMs?
  
 \textbf{Q2. Accuracy:} whether \Tool{} will report loops, which are FSM loops, 
 generating false positives. 
-
 
 \subsection{Experimental Results}
 
 \input{section/tab-exp}
 
 \noindent\textbf{Coverage.}
+As shown in Table~\ref{tab:exp}, \Tool{} successfully identifies 
+all the {\color{red} XXX} FSM loops 
+from the benchmarks. Since there are four FSM loops containing 
+two state variables and \Tool{} constructs a FSM for every identified state variable, 
+there are in total {\color{red} XXX} extracted FSMs. 
+\Tool{} does not have any false negative.
 
+\input{section/fig-sv}
+
+We then further inspect the characteristics of the identified FSMs. 
+For most of the cases, state variables are local variable either in integer type or in 
+enumeration type. There are {\color{red} XXX} FSMs with a global integer variable
+as its state variable. For {\color{red} XXX} FSMs, 
+their state variables are a field of a \texttt{struct}. 
+Second, what are the possible values for 
+Figure~\ref{fig:sv} shows the percentage of the FSMs for different state numbers. 
+More than 80\% of FSMs contain either two states or three states. 
+The percentage drops significantly when the state number is larger than three. 
+There are two FSMs containing 11 states. 
+These two FSMs have the largest state numbers among all the identified FSMs. 
+For most of the cases,
 
 \noindent\textbf{Accuracy.}
+\Tool{} reports two false positives when analyzing CGC programs. 
+One of the example is shown in Figure~\ref{XXX}
+
+
+\subsection{Case Study}
