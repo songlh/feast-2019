@@ -5,16 +5,13 @@ In this section, we will discuss how the extracted FSMs can facilitate
 various network and security practices.  
 
 
-\Tool{} is a tool that can automatically extract implemented FSMs in a program. 
-In this section, we will discuss how the extracted FSMs can facilitate 
-various network and security practices.  
-
-
 \noindent\textbf{Network Verification.}  In network operation, before a network 
 is deployed into production, its configuration needs to be verified to avoid 
 runtime errors. In such a network verification process, network operators 
 usually build behavior models for individual network appliances and then 
-reason about the end-to-end properties of the network\cite{mai2011debugging,khurshid2013veriflow,kazemian2012header,kazemian2013real,fayaz2016buzz,panda2017verifying}. FSM is an expressive 
+reason about the end-to-end properties of the 
+network\cite{mai2011debugging,khurshid2013veriflow,kazemian2012header,kazemian2013real,fayaz2016buzz,panda2017verifying}. 
+FSM is an expressive 
 behavior model to represent a wide range of network appliances, including 
 switches and software network functions (such as load balancers, firewalls, 
 and NAT). With individual FSMs and the network topology ready, the network 
@@ -55,8 +52,6 @@ remove code pertaining to the two states.
 The tool can test or validate whether the changed program is correct 
 by launching testing, while monitoring the control flow 
 inside the FSM loop and the value of the state variable \texttt{state}.
-
-\noindent\textbf{Code Debloating.}
 
 
 
