@@ -5,7 +5,24 @@ In this section, we will discuss how the extracted FSMs can facilitate
 various network and security practices.  
 
 
-\noindent\textbf{Network Verification.}
+\noindent\textbf{Network Verification.}  In network operation, before a network 
+is deployed into production, its configuration needs to be verified to avoid 
+runtime errors. In such a network verification process, network operators 
+usually build behavior models for individual network appliances and then 
+reason about the end-to-end properties of the network\cite{mai2011debugging,khurshid2013veriflow,kazemian2012header,kazemian2013real,fayaz2016buzz,panda2017verifying}. FSM is an expressive 
+behavior model to represent a wide range of network appliances, including 
+switches and software network functions (such as load balancers, firewalls, 
+and NAT). With individual FSMs and the network topology ready, the network 
+operator could verify whether the communication between end hosts satisfy 
+properties such as reachability, isolation, and loop-freedom.\cite{}
+
+\Tool{} is helpful in the procedure of ``building behavior models for 
+individual network appliances'', which currently is manually crafted by 
+the network operators by reading the code or according to their 
+empirical understanding. It primarily automates the 
+transformation from network software to FSMs. More importantly, it 
+provides the confidence that the output FSM is logically equivalent 
+to the original software.
 
 \noindent\textbf{Code Debloating.}
 Code bloat refers to code in unnecessarily large size~\cite{code-bloat}.
