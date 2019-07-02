@@ -110,12 +110,20 @@ under 99\% confidence level.
 Our study results in Section~\ref{sec:study} are general enough to be 
 extended to other data sets. 
 
-
-
-
 \noindent\textbf{Accuracy.}
-\Tool{} reports two false positives when analyzing CGC programs. 
-One of the example is shown in Figure~\ref{XXX}
+As shown in Table~\ref{tab:exp}, it only has two false positives.
+The false-positive-vs-FSM rate is 1:35. 
+
+The two false positives are caused due to the same reason. 
+In each case, an integer variable is used to hold a function pointer. 
+The identified FSM loop checks whether the integer variable is \texttt{0}. 
+If so, the integer variable is assigned with a constant number, 
+which is actually the address for the entry point of a function. 
+\Tool{} identifies the integer variable as a state variable.  
+In future, we plan to extend \Tool{} by examining how identified 
+state variables are used beyond FMS 
+loops to filter out similar false positives. 
 
 
-\subsection{Case Study}
+
+
