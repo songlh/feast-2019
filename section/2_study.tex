@@ -28,17 +28,16 @@ community~\cite{QSYM, Driller, VUzzer}.
 To conduct the study, we first randomly sample 
 40 programs from the CGC dataset.
 We then manually inspect the sampled programs and look for implementation of FSMs.
-In total, we identify 24 implemented FSMs, 
+In total, we identify 25 implemented FSMs, 
 and they are the targets of our study.
-Figure~\ref{fig:cgc-fsm} shows one example.
+
+Figure~\ref{fig:cgc-fsm} shows one example of studied FSMs.
 Function \texttt{cgc\_parse\_set()} takes string \texttt{right} 
 as input and returns \texttt{true} if \texttt{right} matches 
 regular expression ``\verb/|("[^"]*")?|/''. 
 Figure~\ref{fig:cgc} shows the implemented FSM. 
 In total the FSM contains six different states 
 and nine possible state transitions. 
-
-
 
 \input{section/fig-cgc-code}
 
@@ -58,72 +57,86 @@ determines whether to stay in the current state or transit to a new state.
 The underlying intuition is that a FSM usually needs to process 
 multiple inputs and similar logics are applied during the processing, 
 so that using loop is a natural way to implement a FSM. 
-Another important observation is that 
-the loops used to implement the studied FSMs do not execute constant iterations,
-and their executions dynamically depend on inputs. 
-For example, the iteration number of the loop in Figure~\ref{fig:cgc-fsm}
-is not constant and it 
-depends on the content of input string \texttt{right}.
 
+Another important observation is that 
+the FSM loops do not execute constant 
+iterations or take constant trip counts.
+Their executions dynamically depend on inputs, 
+since it is very rare that a FSM can arrive at a final 
+state after processing a predefined, constant number of inputs. 
+For example, the iteration number of the 
+loop in Figure~\ref{fig:cgc-fsm}
+is not constant and it
+depends on the content of input string \texttt{right}.
 
 Second, how internal states ($Q$) are maintained by the FSMs?
 Intuitively, there must be a state variable, which tracks the current state of a FMS.
-%and a FSM loop conditionally update its state variable in each iteration.  
+When state transition happens, 
+the value of the state variable is changed. 
 Our study confirms this intuition. 
 We also find that state variables are either in integer type or enumeration type,
 and their values are discrete and bounded in a certain range. 
-This finding inspires us to apply static value set analysis~\cite{DEEPVSA,VSA} 
-to determine all possible states of an implemented FSM.
+This finding indicates that static value set analysis~\cite{DEEPVSA,VSA} 
+can potentially determine all possible states of an implemented FSM.
 For example, local variable \texttt{state} declared at line 11
 is the state variable of the FSM in Figure~\ref{fig:cgc-fsm}.
 It is in enumeration type.
-In total, it has six possible values specified by the declaration of 
-its type at line 1, corresponding to 
-the six states in Figure~\ref{fig:cgc}.
+In total, it has six possible values 
+specified by its type declaration at line 1, 
+corresponding to the six states in Figure~\ref{fig:cgc}.
 Interestingly, one studied FSM loop contains two state variables,
 and this case reminders us that developers could use one loop 
 to implement multiple FSMs. 
+We need to extract all of them when designing \Tool{}.
+
 
 
 Third, what is the input alphabet ($\sum$)? 
 The input alphabet of a FSM is theoretically bounded by all possible values 
-of the data type used to save inputs. 
+of the data type used to represent inputs. 
 For example, the input alphabet of the FSM 
-in Figure~\ref{fig:cgc-fsm} 
-contains all possible byte values.
+in Figure~\ref{fig:cgc-fsm} contains all possible byte values.
 There are also cases where an input alphabet is a subset of all possible values, 
 and we think value set analysis can help refine 
 the input alphabet for an identified FSM.
+
+We observe that a FSM loop processes a distinct input in each iteration. 
+Sometimes, a FSM loop needs to refer to a different memory location for a new input. 
+Sometimes, a new input is written to the same 
+location in each iteration before the FSM loop starts its procession.    
+For example, \texttt{right} points to the input character 
+processed by the FSM in each iteration. 
+The value of \texttt{right} is incremented by one at line 38 in each iteration, 
+so that the FSM reads a different memory location in each iteration. 
+
 We also observe that during the implementation of a FSM, 
 developers usually do not enumerate the processing rule for every possible
 input value, 
 and they tend to explicitly specify the rules only for several special values
 and leave others to be handled by a default rule. 
 For example, only the processing rules for `\verb/|/' and `''' 
-are specified in Figure~\ref{fig:cgc-fsm}, 
+are explicitly specified in Figure~\ref{fig:cgc-fsm}, 
 and all other byte values are handled by 
 the default rule at line 31. 
-\commentlh{remember to mention a distinct input is processed in each iteration 
-and remember to discuss how to identify variables or memory locations holding inputs}
-
 
 Four, how the transition functions ($\delta$) are implemented?
 Transition functions take the current state and a value
 in the alphabet as input and output the next state. 
+A transition function is executed in each iteration, 
+the FSM relies on the output value to decide whether to transit to a new state. 
 We observe that transition functions are implemented
 using control constructs (e.g., \texttt{if}, \texttt{switch}). 
 For example, a transition function in Figure~\ref{fig:cgc-fsm} 
-is implemented in line 14, 16 and 17. 
-If the current state is \texttt{start} at line 16 and the current input value is 
-`\verb/|/’ at line 14, the transition function outputs \texttt{open\_set}
+is implemented in line 14, 15, 16, and 17. 
+If the current state is \texttt{start} 
+at line 16 and the current input value is 
+`\verb/|/' at line 14, the transition function outputs \texttt{open\_set}
 as the next state at line 17. 
-Line 22, line 24 and line 25 implement another transition function,
+Line 22, 23, 24, and 25 implement another transition function,
 which consumes an input character `''' at line 22 and 
 transits from the current state 
 \texttt{open\_double} at line 24 to 
 the next state \texttt{close\_double} at line 25. 
-\commentlh{remember to discuss a transition function is executed in one iteration}
-
 
 Five, how to specify the initial state ($s_0$) and the final states ($F$)? 
 $s_0$ of a FSM can be specified 
@@ -134,18 +147,20 @@ before the loop execution at line 13.
 When a FSM loop finishes its execution, 
 all possible values of the state variable
 represent $F$ of the FSM. 
-For example, there are two possible values of \texttt{state} when 
-the loop in Figure~\ref{fig:cgc-fsm} finishes its execution, 
-one is \texttt{error} and the other is \texttt{close\_set}.
-These two values represent the two final states of 
-the FSM in Figure~\ref{fig:cgc}.
-\commentlh{\texttt{state} can be any value when the loop finishes its execution}
+For example, the \texttt{while} loop in Figure~\ref{fig:cgc-fsm} terminates 
+its execution when finishing parsing string \texttt{right}, 
+so that \texttt{state} can be any of the six values 
+in the type declaration at line 1 
+and any state of the FSM in 
+Figure~\ref{fig:cgc} can be a final state. 
+
 
 To sum up, our empirical study shows that 
-there are clearly code patterns used by developers to implement FSMs. 
+there are clear code patterns used by developers to implement FSMs. 
 In Section~\ref{sec:impl}, we will discuss how we 
 leverage these patterns to build \Tool{}, 
-which can extract implemented FSMs from a program. 
+which can automatically extract implemented FSMs from a program. 
+
 
 
 
