@@ -1,3 +1,6 @@
 \section{Related Works}
+\textbf{Program analysis to extract models.} A set of work also applies various program analysis techniques to extract certain composing elements in programs: for example, NFactor\cite{wu2016automatic} uses symbolic execution and program slicing to extract match-action tables in NF programs; StateAlyzr\cite{khalid2016paving} extracts state abstractions. While \Tool{} extract FSMs, which is a more concise and expressive model.
+
+\textbf{Blackbox modeling.} Another approach to get the FSM of a program is blackbox modeling. L* algorithm\cite{angluin1987learning} by Angluin is the theoretical foundation, and it is applied in various scenarios (e.g., NF modeling\cite{moon2019alembic}, protocol analysis\cite{cho2011mace}). Compared with \Tool{}, the completeness and soundness of the blackbox approach are limited --- it is not possible to enumerate all inputs for blackbox testing (e.g., the input of infinite length).
 
 \section{Conclusions}
