@@ -10,21 +10,22 @@ is deployed into production, its configuration needs to be verified to avoid
 runtime errors. In such a network verification process, network operators 
 usually build behavior models for individual network appliances and then 
 reason about the end-to-end properties of the 
-network\cite{mai2011debugging,khurshid2013veriflow,kazemian2012header,kazemian2013real,fayaz2016buzz,panda2017verifying}. 
+network~\cite{mai2011debugging,khurshid2013veriflow,kazemian2012header,kazemian2013real,fayaz2016buzz,panda2017verifying}. 
 FSM is an expressive 
 behavior model to represent a wide range of network appliances, including 
 switches and software network functions (such as load balancers, firewalls, 
 and NAT). With individual FSMs and the network topology ready, the network 
 operator could verify whether the communication between end hosts satisfy 
-properties such as reachability, isolation, and loop-freedom.\cite{}
+properties such as reachability, isolation, and loop-freedom~\cite{xxx}.
 
 \Tool{} is helpful in the procedure of ``building behavior models for 
 individual network appliances'', which currently is manually crafted by 
 the network operators by reading the code or according to their 
-empirical understanding. It primarily automates the 
+empirical understanding. \Tool{} can primarily automate the 
 transformation from network software to FSMs. More importantly, it 
 provides the confidence that the output FSM is logically equivalent 
 to the original software.
+
 
 \noindent\textbf{Code Debloating.}
 Code bloat refers to code in unnecessarily large size~\cite{code-bloat}.
@@ -41,31 +42,41 @@ or eliminate functions unreached from
 \texttt{main}~\cite{container-debloating-1, 
 container-debloating-2, dinghao-1}. 
 None of them try to change the underlying program models.
-With extracted FSMs from \Tool{}, researchers can consider 
-further code debloating can be conducted through
+With extracted FSMs from \Tool{}, 
+further code debloating can be performed through
 eliminating unnecessary program logics. 
 For example, given the extracted FSM in Figure~\ref{fig:cgc}, 
 developers may consider removing state \texttt{open\_double} and 
 state \texttt{close\_double}. 
 A tool can take the FSM from \Tool{} as input and automatically 
 remove code pertaining to the two states. 
-The tool can test or validate whether the changed program is correct 
-by launching testing, while monitoring the control flow 
+The tool can test or validate the changed program 
+by monitoring the control flow 
 inside the FSM loop and the value of the state variable \texttt{state}.
 
-
-
 \noindent\textbf{Fuzz Testing.}
-Fuzzing is an automated testing technique. Its core idea is 
-to generate random inputs through randomly mutating existing inputs and 
-use the random inputs to execute 
-a tested program with the goal to trigger unexpected behaviors,
-such as program crashes and assertion errors.
-Fuzzers are evaluated by measuring code coverage. 
+Fuzzing is an automated testing technique, 
+which executes a tested program
+using inputs generated through random mutation 
+with the goal to trigger unexpected behaviors,
+such as program crashes and assertion errors~\cite{afl,Angora,youwei-1}. 
+Fuzzers are usually evaluated by measuring code coverage. 
 A better fuzzer can cover more lines of code 
-or branches under a given time constraint. 
-
+or branches under a given time constraint, 
+or cover all lines of code with less time. 
 
 The state-of-the-art fuzzers are not good at processing 
-implement FSMs.
-Take the FSM in Figure~\ref{xxx} as an example. 
+implement FSMs inside a program.
+Take the FSM in Figure~\ref{fig:cgc-fsm} as an example, 
+to trigger the program to transit to state \texttt{close\_set} and execute line 20, 
+a fuzzer needs to generate an input ``\verb/||/''. 
+If the fuzzer completely replies on random mutation, the probability to 
+create the input is $1/(256 * 256)$. 
+However, if the fuzzer is enhanced by the 
+FSM in Figure~\ref{fig:cgc} extracted by \Tool{}, 
+it knows how to create inputs to quickly cover 
+all states and state transitions of the FSM.  
+
+
+
+

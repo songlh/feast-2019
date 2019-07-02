@@ -124,6 +124,9 @@ which is actually the address for the entry point of a function.
 In future, we plan to extend \Tool{} by examining how identified 
 state variables are used beyond FSM 
 loops to filter out similar false positives. 
+Take the FSM in Figure~\ref{fig:cgc} as an example, 
+to trigger the program to execute line 20, 
+a fuzzer needs to generate an input \verb/|("[^"]*")?|/
 
 
 
