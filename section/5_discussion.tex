@@ -34,3 +34,16 @@ The tool can test or validate whether the changed program is correct
 by launching testing, while monitoring the control flow 
 inside the FSM loop and the value of the state variable \texttt{state}.
 
+\noindent\textbf{Fuzz Testing.}
+Fuzzing is an automated testing technique. Its core idea is 
+to generate random inputs through randomly mutating existing inputs and 
+use the random inputs to execute 
+a tested program with the goal to trigger unexpected behaviors,
+such as program crashes and assertion errors.
+Fuzzers are evaluated by measuring code coverage. 
+A better fuzzer can cover more lines of code 
+or branches under a given time constraint. 
+
+The state-of-the-art fuzzers are not good at processing 
+implement FSMs.
+Take the FSM in Figure~\ref{xxx} as an example. 
