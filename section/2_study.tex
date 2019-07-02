@@ -30,12 +30,11 @@ To conduct the study, we first randomly sample
 We then manually inspect the sampled programs and look for implementation of FSMs.
 In total, we identify 25 implemented FSMs, 
 and they are the targets of our study.
-
-Figure~\ref{fig:cgc-fsm} shows one example of studied FSMs.
+Figure~\ref{fig:cgc-fsm} shows one such example.
 Function \texttt{cgc\_parse\_set()} takes string \texttt{right} 
 as input and returns \texttt{true} if \texttt{right} matches 
 regular expression ``\verb/|("[^"]*")?|/''. 
-Figure~\ref{fig:cgc} shows the implemented FSM. 
+Figure~\ref{fig:cgc} shows the underlying FSM. 
 In total the FSM contains six different states 
 and nine possible state transitions. 
 
