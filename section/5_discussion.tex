@@ -1,7 +1,36 @@
 \section{Applications}
 
+\Tool{} is a tool that can automatically extract implemented FSMs in a program. 
+In this section, we will discuss how the extracted FSMs can facilitate 
+various network and security practices.  
+
+
 \noindent\textbf{Network Verification.}
 
-\noindent\textbf{Fuzz Testing.}
+\noindent\textbf{Code Debloating.}
+Code bloat refers to code in unnecessarily large size~\cite{code-bloat}.
+It widely exists in production-run software~\cite{code-bloat-study}. 
+If untackled, bloated code can introduce more bugs and vulnerabilities, 
+lowering the security~\cite{protocol-mao}, 
+and conduct resultless or redundant computation, 
+degrading the performance~\cite{BloatFSE2008,XuBloatPLDI2009,XuBloatPLDI2010}. 
 
-%\noident\textbf{}
+Many techniques have been proposed to address the code bloating problem. 
+They either remove temporary object copies~\cite{BloatFSE2008,XuBloatPLDI2009,
+XuBloatPLDI2010,Reusable,Cachetor} 
+or eliminate functions unreached from 
+\texttt{main}~\cite{container-debloating-1, 
+container-debloating-2, dinghao-1}. 
+None of them try to change the underlying program models.
+With extracted FSMs from \Tool{}, researchers can consider 
+further code debloating can be conducted through
+eliminating unnecessary program logics. 
+For example, given the extracted FSM in Figure~\ref{fig:cgc}, 
+developers may consider removing state \texttt{open\_double} and 
+state \texttt{close\_double}. 
+A tool can take the FSM from \Tool{} as input and automatically 
+remove code pertaining to the two states. 
+The tool can test or validate whether the changed program is correct 
+by launching testing, while monitoring the control flow 
+inside the FSM loop and the value of the state variable \texttt{state}.
+
