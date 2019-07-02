@@ -45,37 +45,37 @@ None of them try to change the underlying program models.
 With extracted FSMs from \Tool{}, 
 further code debloating can be performed through
 eliminating unnecessary program logics. 
-For example, given the extracted FSM in Figure~\ref{fig:cgc}, 
+For example, given the extracted FSM (Figure~\ref{fig:cgc}), 
 developers may consider removing state \texttt{open\_double} and 
 state \texttt{close\_double}. 
 A tool can take the FSM from \Tool{} as input and automatically 
 remove code pertaining to the two states. 
 The tool can test or validate the changed program 
 by monitoring the control flow 
-inside the FSM loop and the value of the state variable \texttt{state}.
+inside the FSM loop and the value of the state variable.
 
 \noindent\textbf{Fuzz Testing.}
 Fuzzing is an automated testing technique, 
-which executes a tested program
-using inputs generated through random mutation 
-with the goal to trigger unexpected behaviors,
-such as program crashes and assertion errors~\cite{afl,Angora,youwei-1}. 
+which executes a program
+using randomly mutated inputs 
+with the goal to trigger unexpected program behaviors,
+such as crashes and assertion errors~\cite{afl,Angora,youwei-1}. 
 Fuzzers are usually evaluated by measuring code coverage. 
 A better fuzzer can cover more lines of code 
-or branches under a given time constraint, 
-or cover all lines of code with less time. 
-
+or branches under a given time constraint.
 The state-of-the-art fuzzers are not good at processing 
-implement FSMs inside a program.
+FSMs in a program.
 Take the FSM in Figure~\ref{fig:cgc-fsm} as an example, 
-to trigger the program to transit to state \texttt{close\_set} and execute line 20, 
-a fuzzer needs to generate an input ``\verb/||/''. 
-If the fuzzer completely replies on random mutation, the probability to 
-create the input is $1/(256 * 256)$. 
+``\verb/||/'' is the only input which has two characters and 
+can transit the program to state \texttt{close\_set} at line 20.
+If a fuzzer completely replies on random mutation, the probability to 
+create ``\verb/||/'' is very low ($1/(256 * 256)$). 
 However, if the fuzzer is enhanced by the 
-FSM in Figure~\ref{fig:cgc} extracted by \Tool{}, 
-it knows how to create inputs to quickly cover 
-all states and state transitions of the FSM.  
+FSM in Figure~\ref{fig:cgc}, 
+it is very easy for the fuzzer to figure out how to create various inputs and quickly cover 
+all states and state transitions.  
+
+
 
 
 

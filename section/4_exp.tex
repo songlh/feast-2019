@@ -114,7 +114,6 @@ extended to other data sets.
 As shown in Table~\ref{tab:exp}, \Tool{} is accurate. 
 It only has two false positives.
 The false-positive-vs-FSM rate is 1:35. 
-
 The two false positives are caused due to the same reason. 
 In each case, an integer variable is used to hold a function pointer. 
 The identified FSM loop checks whether the integer variable is \texttt{0}. 
@@ -124,9 +123,6 @@ which is actually the address for the entry point of a function.
 In future, we plan to extend \Tool{} by examining how identified 
 state variables are used beyond FSM 
 loops to filter out similar false positives. 
-Take the FSM in Figure~\ref{fig:cgc} as an example, 
-to trigger the program to execute line 20, 
-a fuzzer needs to generate an input \verb/|("[^"]*")?|/
 
 
 
