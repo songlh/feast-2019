@@ -17,7 +17,7 @@ FSM is an expressive
 behavior model to represent a wide range of network appliances, including 
 switches and software network functions (such as load balancers, firewalls, 
 and NAT). With individual FSMs and the network topology ready, the network 
-operator could verify whether the communication between end hosts satisfy 
+operator could verify whether the communication between end hosts satisfies 
 properties such as reachability, isolation, and loop-freedom~\cite{xxx}.
 
 \Tool{} is helpful in the procedure of ``building behavior models for 
@@ -47,7 +47,7 @@ None of them try to change the underlying program models.
 With extracted FSMs from \Tool{}, 
 further code debloating can be performed through
 eliminating unnecessary program logics. 
-For example, given the extracted FSM (Figure~\ref{fig:cgc}), 
+For example, given the extracted FSM in Figure~\ref{fig:cgc}, 
 developers may consider removing state \texttt{open\_double} and 
 state \texttt{close\_double}. 
 A tool can take the FSM from \Tool{} as input and automatically 
@@ -71,10 +71,10 @@ Take the FSM in Figure~\ref{fig:cgc-fsm} as an example,
 ``\verb/||/'' is the only input which has two characters and 
 can transit the program to state \texttt{close\_set} at line 20.
 If a fuzzer completely replies on random mutation, the probability to 
-create ``\verb/||/'' is very low ($1/(256 * 256)$). 
+generate ``\verb/||/'' is very low ($1/(256 * 256)$). 
 However, if the fuzzer is enhanced by the 
 FSM in Figure~\ref{fig:cgc}, 
-it is very easy for the fuzzer to figure out how to create various inputs and quickly cover 
+it is very easy for the fuzzer to figure out how to create various inputs to quickly cover 
 all states and state transitions.  
 
 
