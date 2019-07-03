@@ -112,7 +112,7 @@ developers usually do not enumerate the processing rule for every possible
 input value, 
 and they tend to explicitly specify the rules only for several special values
 and leave others to be handled by a default rule. 
-For example, only the processing rules for `\verb/|/' and `''' 
+For example, only the processing rules for \texttt{`|'} and \texttt{`"'} 
 are explicitly specified in Figure~\ref{fig:cgc-fsm}, 
 and all other byte values are handled by 
 the default rule at line 31. 
@@ -128,10 +128,10 @@ For example, a transition function in Figure~\ref{fig:cgc-fsm}
 is implemented in line 14, 15, 16, and 17. 
 If the current state is \texttt{start} 
 at line 16 and the current input value is 
-`\verb/|/' at line 14, the transition function outputs \texttt{open\_set}
+\texttt{`|'} at line 14, the transition function outputs \texttt{open\_set}
 as the next state at line 17. 
 Line 22, 23, 24, and 25 implement another transition function,
-which consumes an input character `''' at line 22 and 
+which consumes an input character \texttt{`"'} at line 22 and 
 transits from the current state 
 \texttt{open\_double} at line 24 to 
 the next state \texttt{close\_double} at line 25. 
