@@ -192,7 +192,7 @@ for an input to be processed in each iteration.
 After figuring out where a FSM locates its inputs, 
 \Tool{} understands the type of the inputs 
 and considers all possible values in that type
-as the input alphabet $\sum$. For example, \Tool{} identifies 
+as the input alphabet $\sum$. For example, \Tool{} recognizes 
 the $\sum$ as all possible byte values 
 for the FSM in Figure~\ref{fig:cgc-fsm}. 
 
@@ -213,7 +213,7 @@ If not, \Tool{} successfully identifies a transition function,
 which transits a FSM from a state to another state pertaining to 
 the values used at the starting assignment 
 site and ending site respectively. 
-\Tool{} figures out the input values the identified 
+\Tool{} figures out the input value the identified 
 transition function refers to 
 by analyzing the collected path constraints. 
 
@@ -244,7 +244,7 @@ and thus \Tool{} does not consider this path indicates a transition function.
 
 
 
-\Tool{} compute $s_0$ and $F$ through analyzing the value of 
+\Tool{} computes $s_0$ and $F$ through analyzing the value of 
 the state value before the execution of the 
 FSM loop and after the loop execution respectively. 
 For example, the value of \texttt{state} is \texttt{start} before the loop in Figure~\ref{fig:cgc-fsm} executes, 
