@@ -27,7 +27,7 @@ one contains a FSM, and the other one does not.
 Second, we leverage the DARPA CGC dataset~\cite{CGC}. 
 In total, there are 197 programs in the CGC dataset.
 As discussed in Section~\ref{sec:study}, 
-we already use 40 of them to conduct our empirical study,
+we have already used 40 of them to conduct our empirical study,
 so that we use the remaining 157 programs in our evaluation.
 Third, we apply \Tool{} to OpenVPN~\cite{openvpn}, 
 which provides an implementation of virtual private network and 
@@ -55,7 +55,7 @@ identify all FSM loops.
 As shown in Table~\ref{tab:benchmark}, there are in 
 total 66 FSM loops.
 Four FSM loops contain two state variables, 
-and all other FMS loops contain exact one state variables.
+and all other FMS loops contain exact one state variable.
 Therefore, there are in total 70 FSMs implemented in all our benchmarks.  
 We apply \Tool{} to all benchmark programs. 
 We mainly compute metrics to answer two research 
@@ -63,8 +63,7 @@ questions regarding the coverage and accuracy of \Tool{}.
 
 \textbf{Q1. Coverage:} whether \Tool{} can identify all implemented FSMs?
  
-\textbf{Q2. Accuracy:} whether \Tool{} will report loops, which are FSM loops, 
-generating false positives. 
+\textbf{Q2. Accuracy:} whether \Tool{} will report any false positive?
 
 \subsection{Experimental Results}
 \label{sec:results}
@@ -120,7 +119,7 @@ The identified FSM loop checks whether the integer variable is \texttt{0}.
 If so, the integer variable is assigned with a constant number, 
 which is actually the address for the entry point of a function. 
 \Tool{} identifies the integer variable as a state variable.  
-In future, we plan to extend \Tool{} by examining how identified 
+In the future, we plan to extend \Tool{} by examining how identified 
 state variables are used beyond FSM 
 loops to filter out similar false positives. 
 
