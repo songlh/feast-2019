@@ -21,7 +21,7 @@ manual inspection~\cite{fayaz2016buzz,SymNet}, which is time-consuming and error
 Third, extracted FSMs can help developers and automated program analysis tools
 better understand program semantics, facilitating the building of future 
 code debloating~\cite{container-debloating-1,container-debloating-2,dinghao-1} 
-and fuzz techniques~\cite{afl,Angora,youwei-1}.
+and fuzzing techniques~\cite{afl,Angora,youwei-1}.
 
 
 Unfortunately, there has not yet been an existing algorithm that can extract 
@@ -39,22 +39,22 @@ lacking soundness and completeness.
 
 In this work, we presents a tool \Tool{} that can effectively extract FSMs in a program
 with good coverage and accuracy. Technically,  
-\Tool{} utilizes a static technique, takes program code as input, 
+\Tool{} utilizes static analysis techniques, takes program code as input, 
 and outputs a five-element tuple ($Q$, $\sum$, $\delta$, $s_0$, $F$) 
 describing each identified FSM. 
 
 
 We build \Tool in two steps. First, we conduct an empirical study 
 on how FSMs are implemented in the real world. After examining 25 FSMs in the CGC 
-dataset, we find that there are clearly code patterns for FSM implementations. 
+dataset~\cite{CGC}, we find that there are clearly code patterns for FSM implementations. 
 For example, all of our studied FSMs are implemented in 
 loops which do not take a constant trip count, and a state transition operation 
 is control dependent on the current state. 
 Second, we design static analysis routines for the code patterns.
-Our static analysis can recognize suspicious FSM loops,
+Our static analysis techniques can recognize suspicious FSM loops,
 recognize variables representing FSM states, and synthesize the five-element tuples. 
-Our evaluation using programs from three sources shows that
-\Tool{} can identify all implemented FSMs with very low false positives. 
+Our evaluation using 160 programs from three sources shows that
+\Tool{} can identify all implemented FSMs with very few false positives. 
 
 
 %The rest of the paper is organized as follows. 

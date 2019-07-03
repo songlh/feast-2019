@@ -28,8 +28,8 @@ community~\cite{QSYM, Driller, VUzzer}.
 To conduct the study, we first randomly sample 
 40 programs from the CGC dataset. Then, 
 we manually inspect the sampled programs and deeply examine the implementation of FSMs.
-In total, we identify 25 implemented FSMs, 
-and they treat them as the targets of our study.
+In total, we identify 25 implemented FSMs
+and treat them as the targets of our study.
 Figure~\ref{fig:cgc-fsm} shows one such example.
 Function \texttt{cgc\_parse\_set()} takes string \texttt{right} 
 as input and returns \texttt{true} if \texttt{right} matches 
@@ -54,7 +54,7 @@ In each loop iteration, an implemented FSM processes an input and
 determines whether to stay in the current state or transit to a new state. 
 The underlying intuition is that a FSM usually needs to process 
 multiple inputs and similar logics are applied during the processing, 
-so that using loop is a natural way to implement a FSM. 
+so that using a loop is a natural way to implement a FSM. 
 
 Another important observation is that 
 the FSM loops do not execute constant 
@@ -68,7 +68,7 @@ is not constant and it
 depends on the content of input string \texttt{right}.
 
 Second, how internal states ($Q$) are maintained by the FSMs?
-Intuitively, there must be a state variable, which tracks the current state of a FMS.
+Intuitively, there must be a state variable, which tracks the current state of a FSM.
 When state transition happens, 
 the value of the state variable is changed. 
 Our study confirms this intuition. 
@@ -83,7 +83,7 @@ In total, it has six possible values
 specified by its type declaration at line 1, 
 corresponding to the six states in Figure~\ref{fig:cgc}.
 Interestingly, one studied FSM loop contains two state variables,
-and this case reminders us that developers could use one loop 
+and this case reminds us that developers could use one loop 
 to implement multiple FSMs. 
 We need to extract all of them when designing \Tool{}.
 
@@ -123,7 +123,7 @@ in the alphabet as input and output the next state.
 A transition function is executed in each iteration, 
 the FSM relies on the output value to decide whether to transit to a new state. 
 We observe that transition functions are implemented
-using control constructs (e.g., \texttt{if}, \texttt{switch}). 
+using control-flow constructs (e.g., \texttt{if}, \texttt{switch}). 
 For example, a transition function in Figure~\ref{fig:cgc-fsm} 
 is implemented in line 14, 15, 16, and 17. 
 If the current state is \texttt{start} 
@@ -154,7 +154,7 @@ Figure~\ref{fig:cgc} can be a final state.
 
 
 To sum up, our empirical study shows that 
-there are clear code patterns used by developers to implement FSMs. 
+there are clearly code patterns used by developers to implement FSMs. 
 In Section~\ref{sec:impl}, we will discuss how we 
 leverage these patterns to build \Tool{}, 
 which can automatically extract implemented FSMs from a program. 
