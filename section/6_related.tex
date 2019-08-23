@@ -1,42 +1,52 @@
 \section{Related Works}
 \label{sec:related}
 
-\noindent\textbf{Program analysis to extract models.} 
-A set of work also applies various program analysis techniques 
-to extract certain models implemented in programs: 
-for example, NFactor~\cite{wu2016automatic} 
-uses symbolic execution and program slicing to extract match-action 
-tables in NF programs; 
-StateAlyzr~\cite{khalid2016paving} extracts state abstractions 
-from implementations of stateful protocols. 
-Different from existing techniques, \Tool{} extracts FSMs, 
+\noindent\textbf{Program analysis to extract models.}
+A set of work also applies various program analysis techniques
+to extract certain models implemented in programs:
+for example, NFactor~\cite{wu2016automatic}
+uses symbolic execution and program slicing to extract match-action
+tables in NF programs;
+StateAlyzr~\cite{khalid2016paving} extracts state abstractions
+from implementations of stateful protocols.
+Different from existing techniques, \Tool{} extracts FSMs,
 which are more concise and expressive.
 
-\noindent\textbf{Blackbox modeling.} 
-Another approach to get the FSM of a program is blackbox modeling. 
-L* algorithm invented by~\citet{angluin1987learning} 
+\noindent\textbf{Blackbox modeling.}
+Another approach to get the FSM of a program is blackbox modeling.
+L* algorithm invented by~\citet{angluin1987learning}
 is the theoretical foundation.
-It executes a program with different inputs and 
-synthesizes the FSM by observing outputs.  
-L* algorithm is applied in various scenarios 
-(e.g., NF modeling~\cite{moon2019alembic}, 
-protocol analysis~\cite{cho2011mace}). 
-Compared with \Tool{}, blackbox approaches suffer from two limitations. 
-First, they model the whole program as one single FSM in a coarse granularity, 
-while it is possible that there are multiple FSMs in a program. 
-Second, their completeness and soundness are limited, 
-since it is difficult to enumerate all inputs for 
+It executes a program with different inputs and
+synthesizes the FSM by observing outputs.
+L* algorithm is applied in various scenarios
+(e.g., NF modeling~\cite{moon2019alembic},
+protocol analysis~\cite{cho2011mace}).
+Compared with \Tool{}, blackbox approaches suffer from two limitations.
+First, they model the whole program as one single FSM in a coarse granularity,
+while it is possible that there are multiple FSMs in a program.
+Second, their completeness and soundness are limited,
+since it is difficult to enumerate all inputs for
 FSM inference.
 
 
 
 \section{Conclusions}
 
-Automatically extracting FSMs in a program is important 
-and challenging. 
-In this paper, we tackle this problem by building a tool, \Tool{}, 
-which relies on static analysis to identify and synthesize implemented FSMs. 
-Our evaluation shows that \Tool{} successfully identifies all FSMs and 
-reports very few false positives. 
-In the future, we plan to combine \Tool{} with existing network verification 
-or fuzzing techniques to build end-to-end network or security applications. 
+Automatically extracting FSMs in a program is important
+and challenging.
+In this paper, we tackle this problem by building a tool, \Tool{},
+which relies on static analysis to identify and synthesize implemented FSMs.
+Our evaluation shows that \Tool{} successfully identifies all FSMs and
+reports very few false positives.
+In the future, we plan to combine \Tool{} with existing network verification
+or fuzzing techniques to build end-to-end network or security applications.
+
+
+
+\section{Acknowledgements}
+This work is partly supported by NSFC-61872180, Jiangsu “Shuang-Chuang” Program, Jiangsu "Six-Talent-Peaks" Program, and Ant
+Financial through the Ant Financial Science Funds for Security Research.
+
+
+
+

@@ -1,68 +1,68 @@
 \section{Experiment}
 \label{sec:exp}
 
-In this section, we will describe how we set up 
-experiments to evaluate \Tool{} (Section~\ref{sec:meth}) 
-and present the experimental results (Section~\ref{sec:results}). 
+In this section, we will describe how we set up
+experiments to evaluate \Tool{} (Section~\ref{sec:meth})
+and present the experimental results (Section~\ref{sec:results}).
 
 \subsection{Methodology}
 \label{sec:meth}
 
-\noindent\textbf{Implementation and Platform.} 
-We implement \Tool{} using LLVM-7.0.0~\cite{LLVM}, 
-and conduct our experiments on a Linux machine, 
-with E5-2630 CPU, 32GB memory and 3.10 kernel. 
+\noindent\textbf{Implementation and Platform.}
+We implement \Tool{} using LLVM-7.0.0~\cite{LLVM},
+and conduct our experiments on a Linux machine,
+with E5-2630 CPU, 32GB memory and 3.10 kernel.
 
 \noindent\textbf{Benchmarks.}
-\Tool{} is a tool to automatically extract FSMs implemented in a program. 
-Since we build \Tool{} using LLVM, 
-our current implementation can only work on C/C++ programs.  
-However, we believe that our algorithm is general enough 
-to be extended to other programming languages. 
+\Tool{} is a tool to automatically extract FSMs implemented in a program.
+Since we build \Tool{} using LLVM,
+our current implementation can only work on C/C++ programs.
+However, we believe that our algorithm is general enough
+to be extended to other programming languages.
 
 
-To evaluate \Tool{}, we collect C/C++ programs from three sources. 
-First, we evaluate \Tool{} on two programs collected in a CTF contest~\cite{ctf}, 
-one contains a FSM, and the other one does not. 
-Second, we leverage the DARPA CGC dataset~\cite{CGC}. 
+To evaluate \Tool{}, we collect C/C++ programs from three sources.
+First, we evaluate \Tool{} on two programs collected in a CTF contest~\cite{ctf},
+one contains a FSM, and the other one does not.
+Second, we leverage the DARPA CGC dataset~\cite{CGC}.
 In total, there are 197 programs in the CGC dataset.
-As discussed in Section~\ref{sec:study}, 
+As discussed in Section~\ref{sec:study},
 we have already used 40 of them to conduct our empirical study,
 so that we use the remaining 157 programs in our evaluation.
-Third, we apply \Tool{} to OpenVPN~\cite{openvpn}, 
-which provides an implementation of virtual private network and 
-is included in software packages of every released Linux version. 
+Third, we apply \Tool{} to OpenVPN~\cite{openvpn},
+which provides an implementation of virtual private network and
+is included in software packages of every released Linux version.
 
 \input{section/tab-app}
 
 The benchmark information is shown in Table~\ref{tab:benchmark}.
 In total, we use 160 different programs to evaluate \Tool{}.
-Our benchmark set is a representative sample of real-world software, 
+Our benchmark set is a representative sample of real-world software,
 since each program is either a widely-used real application or a simplified program
-from real software. 
-Our benchmark programs are diverse. 
-They cover programs in small, medium and large sizes, 
-with lines of code ranging from 0.3 thousand to more than 100 thousand.  
-There are more than seven thousand 
-loops inside our benchmark programs and accurately 
-identifying FSMs among the loops is not easy. 
-To sum up, we believe that our benchmarks are good 
+from real software.
+Our benchmark programs are diverse.
+They cover programs in small, medium and large sizes,
+with lines of code ranging from 0.3 thousand to more than 100 thousand.
+There are more than seven thousand
+loops inside our benchmark programs and accurately
+identifying FSMs among the loops is not easy.
+To sum up, we believe that our benchmarks are good
 enough to evaluate the effectiveness of \Tool{}.
 
-\noindent\textbf{Evaluation Setting.} 
-For all our benchmark programs, we manually examine all their loops and 
-identify all FSM loops. 
-As shown in Table~\ref{tab:benchmark}, there are in 
+\noindent\textbf{Evaluation Setting.}
+For all our benchmark programs, we manually examine all their loops and
+identify all FSM loops.
+As shown in Table~\ref{tab:benchmark}, there are in
 total 66 FSM loops.
-Four FSM loops contain two state variables, 
+Four FSM loops contain two state variables,
 and all other FSM loops contain exact one state variable.
-Therefore, there are in total 70 FSMs implemented in all our benchmarks.  
-We apply \Tool{} to all benchmark programs. 
-We mainly compute metrics to answer two research 
+Therefore, there are in total 70 FSMs implemented in all our benchmarks.
+We apply \Tool{} to all benchmark programs.
+We mainly compute metrics to answer two research
 questions regarding the coverage and accuracy of \Tool{}.
 
 \noindent\textbf{Q1. Coverage:} whether \Tool{} identifies all FSMs?
- 
+
 \noindent\textbf{Q2. Accuracy:} whether \Tool{} reports any false positive?
 
 \subsection{Experimental Results}
@@ -71,57 +71,57 @@ questions regarding the coverage and accuracy of \Tool{}.
 \input{section/tab-exp}
 
 \noindent\textbf{Coverage.}
-As shown in Table~\ref{tab:exp}, \Tool{} successfully identifies 
-all the 66 FSM loops 
-from the benchmarks. Since there are four FSM loops containing 
-two state variables and \Tool{} constructs a FSM for every identified state variable, 
-there are in total 70 extracted FSMs. 
+As shown in Table~\ref{tab:exp}, \Tool{} successfully identifies
+all the 66 FSM loops
+from the benchmarks. Since there are four FSM loops containing
+two state variables and \Tool{} constructs a FSM for every identified state variable,
+there are in total 70 extracted FSMs.
 \Tool{} has \textbf{no} false negative.
 
 We then further inspect the characteristics of the identified FSMs.
 For most of the FSMs, their state variables are local variables.
-There are only three FSMs with a global variable as its state variable. 
+There are only three FSMs with a global variable as its state variable.
 Most FSMs use a standalone integer (or enumeration) variable as its state variable,
-and only three FSMs use a \texttt{struct} field as its state variable.  
+and only three FSMs use a \texttt{struct} field as its state variable.
 This result shows that \Tool{} can identify state variables implemented in various ways
-and developers tend to use a local, standalone, integer variable to 
+and developers tend to use a local, standalone, integer variable to
 represent the state of a FSM.
 
 
 \input{section/fig-sv}
 
 Figure~\ref{fig:sv} shows the percentage of the identified FSMs
-for different state numbers. 
-More than 80\% of FSMs contain either two states or three states. 
-The percentage drops significantly when the state number is larger than three. 
-There are two FSMs containing 11 states. 
-These two FSMs have the largest state numbers among all the identified FSMs. 
-On average, one identified FSM has 3.02 possible states. 
-Figure~\ref{fig:sv} also shows how the percentage of FSMs distributes 
-across different state numbers 
-for the 25 studied FSMs. 
+for different state numbers.
+More than 80\% of FSMs contain either two states or three states.
+The percentage drops significantly when the state number is larger than three.
+There are two FSMs containing 11 states.
+These two FSMs have the largest state numbers among all the identified FSMs.
+On average, one identified FSM has 3.02 possible states.
+Figure~\ref{fig:sv} also shows how the percentage of FSMs distributes
+across different state numbers
+for the 25 studied FSMs.
 The average state number for the studied FSMs is 3.84.
-We use chi-square goodness of fit test to compare 
-the two distribution in Figure~\ref{fig:sv}. 
-The testing result shows that there is no significant 
-difference between the two distributions 
-under 99\% confidence level. 
-Our study results in Section~\ref{sec:study} are general enough to be 
-extended to other data sets. 
+We use chi-square goodness of fit test to compare
+the two distribution in Figure~\ref{fig:sv}.
+The testing result shows that there is no significant
+difference between the two distributions
+under 99\% confidence level.
+Our study results in Section~\ref{sec:study} are general enough to be
+extended to other data sets.
 
 \noindent\textbf{Accuracy.}
-As shown in Table~\ref{tab:exp}, \Tool{} is accurate. 
+As shown in Table~\ref{tab:exp}, \Tool{} is accurate.
 It only has two false positives.
-The false-positive-vs-FSM rate is 1:35. 
-The two false positives are caused due to the same reason. 
-In each case, an integer variable is used to hold a function pointer. 
-The identified FSM loop checks whether the integer variable is \texttt{0}. 
-If so, the integer variable is assigned with a constant number, 
-which is actually the address for the entry point of a function. 
-\Tool{} identifies the integer variable as a state variable.  
-In the future, we plan to extend \Tool{} by examining how identified 
-state variables are used beyond FSM 
-loops to filter out similar false positives. 
+The ratio of false positives over FSMs is 1/35.
+The two false positives are caused due to the same reason.
+In each case, an integer variable is used to hold a function pointer.
+The identified FSM loop checks whether the integer variable is \texttt{0}.
+If so, the integer variable is assigned with a constant number,
+which is actually the address for the entry point of a function.
+\Tool{} identifies the integer variable as a state variable.
+In the future, we plan to extend \Tool{} by examining how identified
+state variables are used beyond FSM
+loops to filter out similar false positives.
 
 
 
