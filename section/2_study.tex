@@ -5,10 +5,11 @@
 %on real-world FSM implementations 
 %and the study results. 
 
+
 In this section, we first provide some background 
-for the mathematical definition of FSM and 
-the methodology of our empirical study. 
-We then present detailed study results. 
+for FSM and the methodology of our empirical study. 
+We then present detailed empirical study results. 
+
 
 
 \subsection{Background and Methodology}
@@ -96,12 +97,12 @@ depends on the content of string \texttt{right}.
 Intuitively, there must be a state variable to track the current state of an FSM.
 The value of the state variable changes when a state transition happens.
 Our study confirms this intuition.
-We also find that state variables are either in integer type or in enumeration type,
+We also find that state variables are either in integer type or enumeration type,
 and their values are discrete and bounded in a certain range.
 This finding indicates that static value set analysis~\cite{DEEPVSA,VSA}
 can potentially determine all possible states for an implemented FSM.
 For example, the local variable \texttt{state} declared at line 11
-is the state variable in Figure~\ref{fig:cgc-fsm}.
+is the state variable of the FSM implementation in Figure~\ref{fig:cgc-fsm}.
 It is in enumeration type.
 In total, it has six possible values
 specified during its type declaration at line 1,
@@ -110,6 +111,7 @@ Interestingly, one studied FSM loop contains two state variables,
 which reminds us that developers could use one loop
 to implement multiple FSMs.
 We need to extract all of them when designing \Tool{}.
+
 
 
 
@@ -145,7 +147,7 @@ they tend to specify rules only for several important input values and
 leave the others to be handled by a default rule.
 For example, only the processing rules for \texttt{`|'} and \texttt{`"'}
 are explicitly specified in Figure~\ref{fig:cgc-fsm},
-and all the other byte values are handled by
+and all the other input byte values are handled by
 the default rule at line 31.
 
 
@@ -170,20 +172,21 @@ the next state \texttt{close\_double} at line 25.
 
 
 \noindent{\textit{\textbf{Q5.} how to specify the initial states ($s_0$) and the final states ($F$)?}}
-$s_0$ of an FSM can be specified
-by the value of the state variable before the execution of the corresponding 
+The initial state $s_0$ of an FSM can be specified
+by the value of the state variable before 
+the execution of the corresponding 
 FSM loop.
 For example, the initial state $s_0$ of the FSM in Figure~\ref{fig:cgc-fsm}
-is \texttt{start}, which is the value of the variable \texttt{state}
+is \texttt{start}, which is the value of \texttt{state}
 before the loop execution at line 13.
 When an FSM loop finishes its execution,
 all possible values of its state variable
-constitute $F$ of the FSM.
+constitute $F$.
 Take the FSM implemented in Figure~\ref{fig:cgc-fsm} as an illustration, 
 the \texttt{while} loop terminates its execution when 
 finishing parsing the input string \texttt{right}. 
 At that time, \texttt{state} can be any of the six values specified
-in the type declaration at line 1. 
+during the type declaration at line 1. 
 Therefore, any state of the FSM in
 Figure~\ref{fig:cgc} can be a final state.
 
@@ -210,7 +213,7 @@ such as using an event handler or a recursive function.
 Despite these limitations, all our findings are summarized 
 after inspecting a relatively large number of randomly sampled FSM implementations. 
 We believe our findings are intuitive and general enough to represent a high percentage 
-of FSMs in real-world software. 
+of FSMs implemented in real-world software. 
 
 
 

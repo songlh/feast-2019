@@ -60,7 +60,7 @@ identify all FSM loops.
 As shown in Table~\ref{tab:benchmark}, there are in
 total 66 FSM loops.
 Four FSM loops contain two state variables,
-and all other FSM loops contain only one state variable.
+and all the other FSM loops contain only one state variable.
 Therefore, there are in total 70 FSMs implemented in all our benchmarks.
 We apply \Tool{} to all benchmark programs.
 We mainly compute metrics to answer two research
@@ -132,29 +132,32 @@ It only has two false positives.
 The ratio of false positives over FSMs is 1/35.
 The two false positives are caused due to the same reason.
 In each case, an integer variable is used to hold a function pointer.
-The identified FSM loop checks whether the integer variable is zero.%\texttt{0}.
+The identified FSM loop checks whether the integer variable is zero. %\texttt{0}.
 If so, the integer variable is assigned with a constant number,
-which is actually the address for the entry point of a function.
-\Tool{} identifies the integer variable as a state variable.
+which is actually the entry address of a function.
+\Tool{} mistakenly identifies the integer variable as a state variable 
+and the loop as an FSM implementation.
 
 
 
 \subsection{Discussions and Limitations}
 
-All reported false positives of \Tool{} are due to the fact that 
+All false positives reported by \Tool{} are due to the fact that 
 \Tool{} does not consider how an identified state variable is used outside 
 the corresponding FSM loop. 
 We plan to extend \Tool{} to eliminate similar false positives. 
-The design of \Tool{} is guided by the empirical study, so that it is limited by the study. 
-For example, the current version of \Tool{} cannot detect FSMs implemented 
+The design of \Tool{} is guided by the empirical study, and it is also limited by the study. 
+One limitation is that the current version of \Tool{} cannot detect FSMs implemented 
 in a recursive function or an event handler. 
 \Tool{} is a static technique. 
 It faces many traditional technical challenges (e.g. alias analysis, inter-procedural analysis).
 \Tool{} may have both false positives and false negatives when analyzing 
-pointer-heavy code and miss FSMs whose state variable updates conducted 
+pointer-heavy code. 
+It can also miss FSMs whose state variable updates conducted 
 by an indirect callee deep in the call chain from the FSM loop. 
 In the future, we plan to design practical 
-heuristics to address these challenges.   
+heuristics or combine dynamic techniques with \Tool{} to address these challenges. 
+  
  
 
 

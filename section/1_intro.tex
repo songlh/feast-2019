@@ -29,9 +29,9 @@ and fuzzing techniques~\cite{afl,Angora,youwei-1}.
 
 Unfortunately, there has not yet been an existing algorithm that can extract 
 all implemented FSMs from a program.
-Static techniques~\cite{wu2016automatic,khalid2016paving} 
+Existing static techniques~\cite{wu2016automatic,khalid2016paving} 
 can extract certain models implemented in a program,
-but their models are less concise and expressive than FSM. 
+but their extracted models are less concise and expressive than FSM. 
 Dynamic techniques~\cite{angluin1987learning,moon2019alembic,cho2011mace} 
 view the whole programs as a blackbox and 
 model it as one single FSM in a coarse granularity, 
@@ -39,6 +39,7 @@ failing to extract all FSMs and localize program code
 pertaining to an implemented FSM. 
 Dynamic techniques highly depend on inputs used during FSM inference, 
 lacking soundness and completeness.  
+
 
 In this work, we present a tool \Tool{} that can effectively extract implemented FSMs 
 in a program
