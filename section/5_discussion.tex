@@ -15,10 +15,10 @@ reason about the end-to-end properties of the
 network~\cite{mai2011debugging,khurshid2013veriflow,kazemian2012header,kazemian2013real,fayaz2016buzz,panda2017verifying}.
 FSM is an expressive
 behavior model to represent a wide range of network appliances, including
-switches and software network functions (such as load balancers, firewalls,
-and NAT). With individual FSMs and the network topology ready, the network
+switches and software network functions (e.g. load balancers, firewalls, NAT). 
+With individual FSMs and the network topology ready, the network
 operator could verify whether the communication between end hosts satisfies
-properties such as reachability, isolation, and loop-freedom.%~\cite{xxx}.
+properties (e.g. reachability, isolation, loop-freedom).%~\cite{xxx}.
 
 \Tool{} is helpful in the procedure of ``building behavior models for
 individual network appliances'', which currently is manually crafted by
@@ -30,30 +30,28 @@ to the original software.
 
 
 \noindent\textbf{Code Debloating.}
-Code bloat refers to codes in unnecessarily large size~\cite{code-bloat}.
+Code bloat refers to codes in an unnecessarily large size~\cite{code-bloat}.
 It widely exists in production-run software~\cite{code-bloat-study}.
-If untackled, bloated codes could introduce bugs and vulnerabilities jeopardizing the security~\cite{protocol-mao},  or
-degrade the software performance due to meaningless or redundant computation they
-cause~\cite{BloatFSE2008,XuBloatPLDI2009,XuBloatPLDI2010}.
-
-Many techniques have been proposed to address the code bloating problem.
+If untackled, bloated codes can introduce vulnerabilities~\cite{protocol-mao} and 
+degrade the software performance~\cite{BloatFSE2008,XuBloatPLDI2009,XuBloatPLDI2010}.
+Many techniques are proposed to address the code bloating problem.
 They either remove temporary object copies~\cite{BloatFSE2008,XuBloatPLDI2009,
 XuBloatPLDI2010,Reusable,Cachetor}
 or eliminate functions unreached from
 \texttt{main}~\cite{container-debloating-1,
 container-debloating-2, dinghao-1}.
-None of them try to change the underlying program models.
+None of them change the underlying program models.
 With extracted FSMs from \Tool{},
 further code debloating can be performed through
 eliminating unnecessary program logics.
 For example, given the extracted FSM in Figure~\ref{fig:cgc},
 developers may consider removing state \texttt{open\_double} and
-state \texttt{close\_double}.
-A tool can take the FSM from \Tool{} as input and automatically
+\texttt{close\_double}.
+A tool can take the FSM as input and automatically
 remove code pertaining to the two states.
 The tool can test or validate the changed program
 by monitoring the control flow
-inside the FSM loop and the value of the state variable.
+in the FSM loop and the value of the state variable.
 
 \noindent\textbf{Fuzz Testing.}
 Fuzzing is an automated testing technique,
@@ -69,11 +67,11 @@ FSMs in a program.
 Take the FSM in Figure~\ref{fig:cgc-fsm} as an example,
 ``\verb/||/'' is the only input which has two characters and
 can transit the program to state \texttt{close\_set} at line 20.
-If a fuzzer completely replies on random mutation, the probability to
+If a fuzzer completely relies on random mutation, the probability to
 generate ``\verb/||/'' is very low ($1/(256 * 256)$).
 However, if the fuzzer is enhanced by the
 FSM in Figure~\ref{fig:cgc},
-it is very easy for the fuzzer to figure out how to create various inputs to quickly cover
+it will easily figure out how to create inputs to quickly cover
 all states and state transitions.
 
 

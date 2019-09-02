@@ -1,22 +1,36 @@
-\section{Empirical Study}
+\section{Understanding Real-World FSM Implementations}
 \label{sec:study}
-In this section, we first review the mathematical definition of FSM. Then,
-we describe our empirical study on how FSMs are implemented
-in real-world software.
+%In this section, we first review the mathematical definition of FSM. 
+%We then describe how we conduct our empirical study 
+%on real-world FSM implementations 
+%and the study results. 
 
-\noindent\textbf{Background.}
-A finite state machine (FSM) is a mathematical computation model,
-which consists of several internal states and takes external inputs.
-At any time, a FSM can be only in one state.
+In this section, we first provide some background 
+for the mathematical definition of FSM and 
+the methodology of our empirical study. 
+We then present detailed study results. 
+
+
+\subsection{Background and Methodology}
+
+
+
+
+
+
+%\noindent\textbf{Background.}
+A finite state machine (FSM) is a mathematical computation model
+that takes external inputs and transmits among a set of predefined internal states. 
+At any time, an FSM can only be at one state.
 When a certain condition is satisfied,
-a FSM transits from one state to another.
-A FSM can be specified using a five-element tuple ($Q$, $\sum$, $\delta$, $s_0$, $F$),
+an FSM transits from one state to another.
+An FSM can be specified using a five-element tuple ($Q$, $\sum$, $\delta$, $s_0$, $F$),
 where $Q$ is a set of internal states, $\sum$ is an input alphabet,
 $\delta$ is a set of transition functions,
-$s_0$ is the initial state, and $F$ is a set of final states.
+$s_0$ is the initial state, and $F$ is 
+a set of final states.
 
-\noindent\textbf{Real-World Implementation.}
-We leverage the DARPA CGC dataset~\cite{CGC} to
+We inspect the DARPA CGC dataset~\cite{CGC} to
 understand how FSMs are implemented in the real world.
 We choose the CGC dataset because it
 contains a large number of diverse programs simplified
@@ -24,10 +38,16 @@ from real-world software and it
 is also widely used in security
 community~\cite{QSYM, Driller, VUzzer}.
 
+\input{section/fig-cgc-code}
+
+%\noindent\textbf{Methodology.}
+
+
 
 To conduct the study, we first randomly sample
-40 programs from the CGC dataset. Then,
-we manually inspect the sampled programs and deeply examine the implementation of FSMs.
+40 programs from the CGC dataset.
+We then manually inspect the sampled programs and looked for 
+FSM implementations.
 In total, we identify 25 implemented FSMs
 and treat them as the targets of our study.
 Figure~\ref{fig:cgc-fsm} shows one such example.
@@ -35,96 +55,108 @@ Function \texttt{cgc\_parse\_set()} takes string \texttt{right}
 as input and returns \texttt{true} if \texttt{right} matches
 regular expression ``\verb/|("[^"]*")?|/''.
 Figure~\ref{fig:cgc} shows the underlying FSM.
-In total, the FSM contains six different states
+In total, the implemented FSM contains six different states
 and nine possible state transitions.
 
-\input{section/fig-cgc-code}
+
 
 \input{section/fig-cgc-fsm}
 
-To guide the implementation of \Tool{}, our empirical study
-is mainly conducted from the following aspects.
+%\noindent\textbf{Empirical Study.}
 
-First, what code constructs are used to implement the studied FSMs?
+\subsection{Study Results}
+To guide the design of \Tool{}, our empirical study
+is mainly conducted to answer the following five questions. 
+
+
+
+\noindent{{\textit{\textbf{Q1.} what code constructs are used to implement the FSMs?}}}
 Since our goal is to statically identify and extract implemented FSMs,
 we must know what code constructs to inspect.
 Not surprisingly, all our studied FSMs are implemented using a loop,
 like the \texttt{while} loop at line 13 in Figure~\ref{fig:cgc-fsm}.
 In each loop iteration, an implemented FSM processes an input and
 determines whether to stay in the current state or transit to a new state.
-The underlying intuition is that a FSM usually needs to process
+The underlying intuition is that an FSM usually needs to process
 multiple inputs and similar logics are applied during the processing,
-so that using a loop is a natural way to implement a FSM.
+so that using a loop is a natural way to implement an FSM.
 
 Another important observation is that
-the FSM loops do not execute constant
-iterations or take constant trip counts.
-Their executions dynamically depend on inputs,
-since it is very rare that a FSM can arrive at a final
+an FSM loop usually does not execute constant
+iterations or take a constant trip count.
+Its execution dynamically depends on its inputs. 
+Intuitively, it is very rare that an FSM can arrive at a final
 state after processing a predefined, constant number of inputs.
-For example, the iteration number of the
-loop in Figure~\ref{fig:cgc-fsm}
-is not constant and it
-depends on the content of input string \texttt{right}.
+Take the FSM implemented in Figure~\ref{fig:cgc-fsm} as an example,
+the iteration number of the \texttt{while} loop is not constant and
+when the loop terminates its execution  
+depends on the content of string \texttt{right}.
 
-Second, how internal states ($Q$) are maintained by the FSMs?
-Intuitively, there must be a state variable, which tracks the current state of a FSM.
-When state transition happens,
-the value of this state variable is changed.
+\noindent{\textit{\textbf{Q2.} how internal states ($Q$) are maintained by the FSMs?}}
+Intuitively, there must be a state variable to track the current state of an FSM.
+The value of the state variable changes when a state transition happens.
 Our study confirms this intuition.
-We also find that state variables are either in integer type or enumeration type,
+We also find that state variables are either in integer type or in enumeration type,
 and their values are discrete and bounded in a certain range.
 This finding indicates that static value set analysis~\cite{DEEPVSA,VSA}
-can potentially determine all possible states of an implemented FSM.
-For example, local variable \texttt{state} declared at line 11
-is the state variable of the FSM in Figure~\ref{fig:cgc-fsm}.
+can potentially determine all possible states for an implemented FSM.
+For example, the local variable \texttt{state} declared at line 11
+is the state variable in Figure~\ref{fig:cgc-fsm}.
 It is in enumeration type.
 In total, it has six possible values
-specified by its type declaration at line 1,
+specified during its type declaration at line 1,
 corresponding to the six states in Figure~\ref{fig:cgc}.
 Interestingly, one studied FSM loop contains two state variables,
-and this case reminds us that developers could use one loop
+which reminds us that developers could use one loop
 to implement multiple FSMs.
 We need to extract all of them when designing \Tool{}.
 
 
 
-Third, what is the input alphabet ($\sum$)?
-The input alphabet of a FSM is theoretically bounded by all possible values
-of the data type used to represent inputs.
+\noindent{\textit{\textbf{Q3.} what are the input alphabets ($\sum$)?}}
+The input alphabet of an FSM is theoretically bounded by 
+the data type used to represent inputs. 
 For example, the input alphabet of the FSM
 in Figure~\ref{fig:cgc-fsm} contains all possible byte values.
-There are also cases where an input alphabet is a subset of all possible values,
-and we think value set analysis can help refine
-the input alphabet for an identified FSM.
+There are also cases where an input alphabet is only a subset 
+of all possible values in a particular type, 
+and thus we think value set analysis should be applied to help refine
+the input alphabet of an identified FSM.
 
-We observe that a FSM loop processes a distinct input in each iteration.
-Sometimes, a FSM loop needs to refer to a different memory location for a new input.
+
+We have two observations about how an FSM loop handles inputs. 
+First, an FSM loop processes a distinct input in each iteration.
+Sometimes, an FSM loop needs to refer to a different 
+memory location for a new input.
 Sometimes, a new input is written to the same
-location in each iteration before the FSM loop starts its procession.
-For example, \texttt{right} points to the input character
-processed by the FSM in each iteration.
-The value of \texttt{right} is incremented by one at line 38 in each iteration,
-so that the FSM reads a different memory location in each iteration.
-
-We also observe that, when implementing a FSM,
-developers usually do not explicitly write the processing rule for every possible
-input value. Instead,
-they tend to specify rules only for several important values and leave other values to be handled by a default rule.
+location before an FSM loop 
+starts its procession in an iteration.
+For example, \texttt{right} in Figure~\ref{fig:cgc-fsm} 
+points to the input character
+processed by the FSM loop in each iteration.
+The value of \texttt{right} is incremented by one at line 38,
+so that the FSM loop reads an input from a different memory 
+location in each iteration.
+Second, when implementing an FSM,
+developers usually do not explicitly implement the 
+processing rule for every possible input value. 
+Instead,
+they tend to specify rules only for several important input values and 
+leave the others to be handled by a default rule.
 For example, only the processing rules for \texttt{`|'} and \texttt{`"'}
 are explicitly specified in Figure~\ref{fig:cgc-fsm},
-and all other byte values are handled by
+and all the other byte values are handled by
 the default rule at line 31.
 
-Four, how the transition functions ($\delta$) are implemented?
-Transition functions take as input the current state and a value
-in the alphabet and produce the next state.
-A transition function is executed in each iteration,
-and the FSM relies on its output value to make a transition decision.
+
+\noindent{\textit{\textbf{Q4.} how the transition functions ($\delta$) are implemented?}}
+One transition function is executed in each iteration of an FSM loop. 
+It produces the next state for the FSM to transmit to based on 
+the current state and the current input value. 
 We observe that transition functions are implemented
 using control-flow constructs (e.g., \texttt{if}, \texttt{switch}).
 For example, a transition function in Figure~\ref{fig:cgc-fsm}
-is implemented in line 14, 15, 16, and 17.
+is implemented at line 14, 15, 16, and 17.
 If the current state is \texttt{start}
 at line 16 and the current input value is
 \texttt{`|'} at line 14, the transition function outputs \texttt{open\_set}
@@ -135,28 +167,59 @@ transits from the current state
 \texttt{open\_double} at line 24 to
 the next state \texttt{close\_double} at line 25.
 
-Five, how to specify the initial state ($s_0$) and the final states ($F$)?
-$s_0$ of a FSM can be specified
-by the value of the state variable before the execution of the FSM loop.
-For example,  $s_0$ of the FSM in Figure~\ref{fig:cgc-fsm}
-is \texttt{start}, which is the value of \texttt{state}
+
+
+\noindent{\textit{\textbf{Q5.} how to specify the initial states ($s_0$) and the final states ($F$)?}}
+$s_0$ of an FSM can be specified
+by the value of the state variable before the execution of the corresponding 
+FSM loop.
+For example, the initial state $s_0$ of the FSM in Figure~\ref{fig:cgc-fsm}
+is \texttt{start}, which is the value of the variable \texttt{state}
 before the loop execution at line 13.
-When a FSM loop finishes its execution,
-all possible values of the state variable
-represent $F$ of the FSM.
-For example, the \texttt{while} loop in Figure~\ref{fig:cgc-fsm} terminates
-its execution when finishing parsing string \texttt{right},
-so that \texttt{state} can be any of the six values
-in the type declaration at line 1
-and any state of the FSM in
+When an FSM loop finishes its execution,
+all possible values of its state variable
+constitute $F$ of the FSM.
+Take the FSM implemented in Figure~\ref{fig:cgc-fsm} as an illustration, 
+the \texttt{while} loop terminates its execution when 
+finishing parsing the input string \texttt{right}. 
+At that time, \texttt{state} can be any of the six values specified
+in the type declaration at line 1. 
+Therefore, any state of the FSM in
 Figure~\ref{fig:cgc} can be a final state.
 
 
-To sum up, our empirical study shows that
-there are clearly code patterns used by developers to implement FSMs.
-In Section~\ref{sec:impl}, we will discuss how we
-leverage these patterns to build \Tool{},
-which can automatically extract implemented FSMs from a program.
+\noindent\underline{{\textit{Discussion.}}}
+Our empirical study shows that FSM implementations follow certain 
+code patterns. For example, all our studied FSMs are implemented using a loop, 
+and state transitions are implemented in a way that 
+the next value of a state variable is control dependent 
+on the current value of the state variable 
+and the current input. 
+This finding motivates us to leverage static analysis to 
+identify FSM implementations 
+through matching the code patterns. 
+We will present more details later in Section~\ref{sec:impl}.
+
+Threats to the validity of our study could come from several aspects. 
+All our studied FSM implementations come from the CGC dataset,
+which is designed for security purposes and only contains simplified programs 
+instead of real software. 
+Although all the studied FSMs are implemented in a similar way, 
+we do believe that there are other methods to implement an FSM, 
+such as using an event handler or a recursive function. 
+Despite these limitations, all our findings are summarized 
+after inspecting a relatively large number of randomly sampled FSM implementations. 
+We believe our findings are intuitive and general enough to represent a high percentage 
+of FSMs in real-world software. 
+
+
+
+%To sum up, our empirical study shows that
+%there are certain code patterns leveraged by developers to implement FSMs.
+%In Section~\ref{sec:impl}, we will present how we
+%leverage these patterns to build \Tool{},
+%which can automatically extract implemented FSMs from a program.
+
 
 
 

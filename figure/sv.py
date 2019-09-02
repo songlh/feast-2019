@@ -22,8 +22,8 @@ if __name__ == '__main__':
 	ind = np.arange(5)
 	width = 0.35
 	fig, ax = plt.subplots()
-	rects1 = ax.bar(ind, YTestList, width, color='g', label='Test')
-	rects2 = ax.bar(ind + width, YStudyList, width, color='b', label='Study')
+	rects1 = ax.bar(ind, YTestList, width, color='g', label='Test', edgecolor='black', hatch='+')
+	rects2 = ax.bar(ind + width, YStudyList, width, color='b', label='Study', edgecolor='black', hatch='.')
 
 	datemin = 0 - 0.2
 	datemax = 5 #+ 0.2
@@ -37,17 +37,17 @@ if __name__ == '__main__':
 
 	#ax.set_ylim(datemin, datemax)
 
-	ax.xaxis.set_tick_params(labelsize=18)
-	ax.yaxis.set_tick_params(labelsize=18)
+	ax.xaxis.set_tick_params(labelsize=23)
+	ax.yaxis.set_tick_params(labelsize=23)
 
 	plt.xticks(ind+width/2, XList)
 
 	
-	#plt.yticks(ind, ['0', '10', '10^2', '10^3', '10^4', '10^5'])
+	#plt.yticks(np.arange(6), ['0', '10', '20', '30', '40', '50'])
 
 	#plt.show()
-	plt.xlabel('# of States', fontsize=22)
-	plt.ylabel('% of FSMs', fontsize=22)
+	plt.xlabel('# of States', fontsize=28)
+	plt.ylabel('Proportion of FSMs', fontsize=28)
 	plt.gcf().subplots_adjust(bottom=0.15)
 	plt.gcf().subplots_adjust(left=0.15)
 

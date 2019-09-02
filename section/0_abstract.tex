@@ -2,8 +2,13 @@ Finite state machine (FSM) is a type of computation models widely
 used in various software programs.
 Extracting implemented FSMs has many important applications in the
 networking, software engineering and security domains.
-In this paper, we first study how FSMs are implemented in real-world software.
-We then design a static analysis tool, \Tool{}, to identify and synthesize
-implemented FSMs.
-Evaluation using 160 software programs shows that
-\Tool{} can extract FSMs with good coverage and accuracy.
+In this paper, we first conduct an empirical study to understand 
+how FSMs are implemented in real-world software.
+Under the guidance of our study results, we then design a static analysis tool, 
+\Tool{}, to automatically identify and synthesize implemented FSMs.
+Evaluation using 160 software programs from three sources shows that
+\Tool{} can extract all implemented FSMs 
+and report very few false positives.
+
+
+

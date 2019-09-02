@@ -1,31 +1,34 @@
 \section{Introduction}
+\label{sec:intro}
 
-A finite state machine (FSM) is a mathematical model of computation, 
-which performs a series of predetermined actions in 
+A finite state machine (FSM) is a mathematical computation model 
+that performs a series of predetermined actions in 
 reaction to the model inputs~\cite{fsm}. 
 FSMs provide a concise and expressive way to describe
-program logic, so that they widely exist in various software programs, 
+program logic, so that they are widely adopted in different types of software, 
 including network protocols, 
 compiler and event-driven programs. 
 
-Automatically extracting implemented FSMs in a program has 
+Automatically extracting implemented FSMs from a program has 
 many important applications. 
-First, the implementation of a FSM may be inaccurate. By 
- comparing the extracted version with its orginal design, one 
+First, the implementation of an FSM may be inaccurate. By 
+comparing the extracted version with its original design, one 
 can detect potential mistakes residing in an implementation~\cite{protocol-bug}. 
 Second, the network verification process depends on underlying FSM models 
-in different components to validate the whole network properties 
-(i.e. isolation, reachability).
-Generally, the FSMs fed into verification are largely handcrafted through 
-manual inspection~\cite{fayaz2016buzz,SymNet}, which is time-consuming and error-prone. 
+in different components to validate the whole network's properties 
+(e.g. isolation, reachability).
+Right now, the FSMs fed into verification are largely handcrafted through 
+manual inspection~\cite{fayaz2016buzz,SymNet}, 
+which is time-consuming and error-prone. 
 Third, extracted FSMs can help developers and automated program analysis tools
 better understand program semantics, facilitating the building of future 
 code debloating~\cite{container-debloating-1,container-debloating-2,dinghao-1} 
 and fuzzing techniques~\cite{afl,Angora,youwei-1}.
 
 
+
 Unfortunately, there has not yet been an existing algorithm that can extract 
-all implemented FSMs in a program.
+all implemented FSMs from a program.
 Static techniques~\cite{wu2016automatic,khalid2016paving} 
 can extract certain models implemented in a program,
 but their models are less concise and expressive than FSM. 
@@ -34,27 +37,36 @@ view the whole programs as a blackbox and
 model it as one single FSM in a coarse granularity, 
 failing to extract all FSMs and localize program code 
 pertaining to an implemented FSM. 
-Dynamic techniques highly depend on used inputs during FSM inference, 
+Dynamic techniques highly depend on inputs used during FSM inference, 
 lacking soundness and completeness.  
 
-In this work, we presents a tool \Tool{} that can effectively extract FSMs in a program
-with good coverage and accuracy. Technically,  
-\Tool{} utilizes static analysis techniques, takes program code as input, 
+In this work, we present a tool \Tool{} that can effectively extract implemented FSMs 
+in a program
+with good coverage and accuracy. 
+\Tool{} is built based on LLVM infrastructure, 
+and thus it takes LLVM intermediate 
+code emitted during compilation as input. 
+\Tool{} utilizes static analysis techniques to search FSM implementations inside 
+an input program,
 and outputs a five-element tuple ($Q$, $\sum$, $\delta$, $s_0$, $F$) 
 describing each identified FSM. 
 
 
-We build \Tool in two steps. First, we conduct an empirical study 
+We build \Tool{} in two steps. First, we conduct an empirical study 
 on how FSMs are implemented in the real world. After examining 25 FSMs in the CGC 
-dataset~\cite{CGC}, we find that there are clearly code patterns for FSM implementations. 
+dataset~\cite{CGC}, we find that FSM implementations rely on certain code patterns. 
 For example, all of our studied FSMs are implemented in 
-loops which do not take a constant trip count, and a state transition operation 
+loops which do not take a constant trip count and a state transition operation 
 is control dependent on the current state. 
 Second, we design static analysis routines for the code patterns.
 Our static analysis techniques can recognize suspicious FSM loops,
-recognize variables representing FSM states, and synthesize the five-element tuples. 
-Our evaluation using 160 programs from three sources shows that
-\Tool{} can identify all implemented FSMs with very few false positives. 
+pinpoint variables representing FSM states, 
+and synthesize the five-element tuple for each identified FSM. 
+We use 160 programs from three sources to evaluate \Tool{}.
+The evaluation results show that \Tool{} can identify all implemented FSMs 
+with very few false positives. 
+
+
 
 
 %The rest of the paper is organized as follows. 
