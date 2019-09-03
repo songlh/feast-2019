@@ -34,7 +34,7 @@ Therefore, we use the remaining 157 programs in our evaluation.
 Third, we apply \Tool{} to OpenVPN~\cite{openvpn},
 which is an implementation of virtual private network. 
 OpenVPN is widely-used and it
-is included in software packages of every released Linux version.
+is included in software packages of many released Linux version.
 
 \input{section/tab-app}
 
@@ -113,14 +113,14 @@ state variables implemented in different ways.
 %Our study results in Section~\ref{sec:study} are general enough to be
 %extended to other data sets.
 
-Figure~\ref{fig:sv} shows how the percentage of FSMs distribute 
+Figure~\ref{fig:sv} shows how the proportion of FSMs distributes 
 across different state numbers for the FSMs identified by \Tool{} 
 and the FSMs studied in Section~\ref{sec:study}. 
 Most FSMs from the two sources contain two or three states, 
-and the percentage drops significantly when the state number is larger than three. 
+and the proportion drops significantly when the state number is larger than three. 
 On average, one identified FSM has 3.02 states, 
 and one studied FSM has 3.84 states. 
-The average state numbers are similar. 
+The average state numbers are similar,
 demonstrating that the sampled FSM set used in our study is general. 
 
 
@@ -130,7 +130,7 @@ demonstrating that the sampled FSM set used in our study is general.
 As shown in Table~\ref{tab:exp}, \Tool{} is accurate.
 It only has two false positives.
 The ratio of false positives over FSMs is 1/35.
-The two false positives are caused due to the same reason.
+The two false positives are due to the same reason.
 In each case, an integer variable is used to hold a function pointer.
 The identified FSM loop checks whether the integer variable is zero. %\texttt{0}.
 If so, the integer variable is assigned with a constant number,
@@ -153,10 +153,10 @@ in a recursive function or an event handler.
 It faces many traditional technical challenges (e.g. alias analysis, inter-procedural analysis).
 \Tool{} may have both false positives and false negatives when analyzing 
 pointer-heavy code. 
-It can also miss FSMs whose state variable updates conducted 
+It can also miss FSMs whose state variable updates are conducted 
 by an indirect callee deep in the call chain from the FSM loop. 
 In the future, we plan to design practical 
-heuristics or combine dynamic techniques with \Tool{} to address these challenges. 
+heuristics or combine dynamic techniques with \Tool{} to address these limitations. 
   
  
 

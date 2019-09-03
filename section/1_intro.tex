@@ -33,7 +33,7 @@ Existing static techniques~\cite{wu2016automatic,khalid2016paving}
 can extract certain models implemented in a program,
 but their extracted models are less concise and expressive than FSM. 
 Dynamic techniques~\cite{angluin1987learning,moon2019alembic,cho2011mace} 
-view the whole programs as a blackbox and 
+view the whole program as a blackbox and 
 model it as one single FSM in a coarse granularity, 
 failing to extract all FSMs and localize program code 
 pertaining to an implemented FSM. 
@@ -45,10 +45,10 @@ In this work, we present a tool \Tool{} that can effectively extract implemented
 in a program
 with good coverage and accuracy. 
 \Tool{} is built based on LLVM infrastructure, 
-and thus it takes LLVM intermediate 
+and it takes LLVM intermediate 
 code emitted during compilation as input. 
 \Tool{} utilizes static analysis techniques to search FSM implementations inside 
-an input program,
+an input program
 and outputs a five-element tuple ($Q$, $\sum$, $\delta$, $s_0$, $F$) 
 describing each identified FSM. 
 

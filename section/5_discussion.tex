@@ -64,11 +64,11 @@ A better fuzzer can cover more lines of code
 or branches under a given time constraint.
 The state-of-the-art fuzzers are not good at processing
 FSMs in a program.
-Take the FSM in Figure~\ref{fig:cgc-fsm} as an example,
-``\verb/||/'' is the only input which has two characters and
+We take the FSM in Figure~\ref{fig:cgc-fsm} as an example.
+String ``\verb/||/'' is the only input which has two characters and
 can transit the program to state \texttt{close\_set} at line 20.
 If a fuzzer completely relies on random mutation, the probability to
-generate ``\verb/||/'' is very low ($1/(256 * 256)$).
+generate ``\verb/||/'' is very low ($1/(256 \times 256)$).
 However, if the fuzzer is enhanced by the
 FSM in Figure~\ref{fig:cgc},
 it will easily figure out how to create inputs to quickly cover

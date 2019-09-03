@@ -47,12 +47,12 @@ community~\cite{QSYM, Driller, VUzzer}.
 
 To conduct the study, we first randomly sample
 40 programs from the CGC dataset.
-We then manually inspect the sampled programs and looked for 
+We then manually inspect the sampled programs and look for 
 FSM implementations.
 In total, we identify 25 implemented FSMs
 and treat them as the targets of our study.
 Figure~\ref{fig:cgc-fsm} shows one such example.
-Function \texttt{cgc\_parse\_set()} takes string \texttt{right}
+Function \texttt{cgc\_parse\_set()} takes the string \texttt{right}
 as input and returns \texttt{true} if \texttt{right} matches
 regular expression ``\verb/|("[^"]*")?|/''.
 Figure~\ref{fig:cgc} shows the underlying FSM.
@@ -88,10 +88,10 @@ iterations or take a constant trip count.
 Its execution dynamically depends on its inputs. 
 Intuitively, it is very rare that an FSM can arrive at a final
 state after processing a predefined, constant number of inputs.
-Take the FSM implemented in Figure~\ref{fig:cgc-fsm} as an example,
-the iteration number of the \texttt{while} loop is not constant and
+We take the FSM implemented in Figure~\ref{fig:cgc-fsm} for example.
+The iteration number of the \texttt{while} loop is not constant and
 when the loop terminates its execution  
-depends on the content of string \texttt{right}.
+depends on the content of the string \texttt{right}.
 
 \noindent{\textit{\textbf{Q2.} how internal states ($Q$) are maintained by the FSMs?}}
 Intuitively, there must be a state variable to track the current state of an FSM.
@@ -182,9 +182,9 @@ before the loop execution at line 13.
 When an FSM loop finishes its execution,
 all possible values of its state variable
 constitute $F$.
-Take the FSM implemented in Figure~\ref{fig:cgc-fsm} as an illustration, 
-the \texttt{while} loop terminates its execution when 
-finishing parsing the input string \texttt{right}. 
+We take the FSM implemented in Figure~\ref{fig:cgc-fsm} as an illustration. 
+The \texttt{while} loop terminates its execution when 
+finishing parsing the string \texttt{right}. 
 At that time, \texttt{state} can be any of the six values specified
 during the type declaration at line 1. 
 Therefore, any state of the FSM in
